@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block content %}
+<form method="POST" action="/signup">
+    <div class="field">
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control form-control-lg" type="email"
+            name="email" placeholder="Email" autofocus="">
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control form-control-lg" type="text"
+            name="name" placeholder="Name" autofocus="">
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="form-outline mb-4">
+            <input type="text" class="form-control form-control-lg" type="password"
+            name="password" placeholder="Password" autofocus="">
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-prinmary btn-lg"
+        style=
+        "
+        padding-left:2.5rem;
+        padding-right:2.5rem;    
+        ">Sign Up</button>
+</form>
+
+{% endblock %}

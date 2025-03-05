@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+{% extends "base.html" %}
+
+{% block content %}
+
+<body>
+    <div class="row ms-4">
+        <h1>工場</h1>
+        <ul>
+            {% for factory in factories %}
+            <li><a href="{{ url_for('departments', factory_id=factory.id) }}">{{ factory.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+
+
+
+
+<script>
+    var factories ={{ factories | tojson }};
+    console.log(factories);
+
+
+</script>
+{% endblock %}
+</html>

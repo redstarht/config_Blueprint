@@ -1,0 +1,169 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+/* ヘッダー */
+header {
+    padding: 1rem;
+    color: #fff;
+    background: linear-gradient(to right, #fa709a 0%, #fee140 100%);
+    z-index: 0;
+}
+
+
+.navbar{
+    padding: 0 !important;
+
+}
+
+.navbar-collapse .navbar-toggler .navbar-index{
+z-index: 2;
+}
+
+.card-header{
+    font-size: 2rem !important;
+
+
+}
+
+.navbar-brand {
+    font-family: "Sora", serif;
+    background-color: rgba(73, 73, 73, 0.3); /* 白色を30%透明 */
+    padding: 1rem 1rem;
+    border-radius: 8px; /* 角を丸める */
+    font-size:1.5rem;
+    color: #fff;
+    font-weight: bold;
+
+}
+
+.navbar-nav {
+    background-color: rgba(0, 0, 0, 0.3); /* 黒色を30%透明 */
+    padding: 0.5rem 1rem;
+    border-radius: 8px; /* 角を丸める */
+}
+
+/* ロゴ画像を中央配置 */
+.logo-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-height: 50px; /* 必要に応じて調整 */
+    z-index: 0;
+    /* width: 100%; */
+
+}
+
+/* スプレッドシート（表） */
+#spreadsheet {
+    max-width: 90%;
+    margin: 20px auto;
+    overflow-x: auto;
+    border: 1px solid #dee2e6;
+    background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+}
+
+/* テーブルのスタイル */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* 行の交互色 */
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* ボタンの中央配置 */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* ボタン */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.tree-view {
+    list-style: none;
+    padding-left: 0;
+}
+
+.tree-view ul {
+    list-style: none;
+    padding-left: 20px;
+}
+
+.tree-item {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.tree-item:hover {
+    background-color: #f8f9fa;
+}
+
+.tree-item.active {
+    background-color: #0d6efd;
+    color: white;
+}
+
+/* トーストメッセージ */
+
+.toast-header {
+    background-color: #c243c4;
+}
+
+.toast-body {
+    background-color: #d73eda;
+}
+
+/* スマホ対応 */
+@media (max-width: 870px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .container {
+        width: 95%;
+    }
+/* サイドバーのスタイル */
+    .sidebar {
+        margin-bottom: 20px;
+    }
+
+}

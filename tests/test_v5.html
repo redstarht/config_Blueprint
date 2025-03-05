@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XC-Config</title>
+    <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <!-- ↓こっからコピペ -->
+    <!-- <script src="https://bossanova.uk/jspreadsheet/v4/jspreadsheet.js"></script>
+    <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jspreadsheet.css" type="text/css" />
+    <script src="https://jsuites.net/v5/jsuites.js"></script>
+    <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" /> -->
+    <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/index.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/jspreadsheet.min.css"
+        type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/jsuites/dist/jsuites.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites/dist/jsuites.min.css" type="text/css" />
+
+</head>
+
+<body>
+    <header>
+        <a class="title-position">XC-Config</a>
+        <nav class="navtitle">テストユーザー</nav>
+
+
+
+    </header>
+    <div id="spreadsheet"></div>
+
+</body>
+<script>
+    var data = [
+        ['','','']
+    ]
+        // ['12345', 'Honda', '一般'],
+        // ['678910', 'Honda', '課長'],
+    ;
+
+    const table = jspreadsheet(document.getElementById('spreadsheet'), {
+        data: data,
+        columns: [
+            {
+                type: 'numeric',
+                title: '社員番号',
+                width: 90
+            },
+            {
+                type: 'text',
+                title: '氏名',
+                width: 120,
+
+            },
+            {
+                type: 'dropdown',
+                title: '役職',
+                width: 120,
+                source: [
+                    "課長",
+                    "組長",
+                    "班長",
+                    "一般",
+                    // (...)
+                ]
+            }
+        ],
+        onchange: function (table, cell, x, y, value) {
+            console.log(`Cell updated: (${x}, ${y}) -> ${value} のインスタンスは${table}`);
+            console.log(table)
+            // 新しいデータを取得
+            var values = [];
+            var values = table.getData(); // [y][0] 1列目のデータ（例: 日付）を取得
+            console.log('Updated Date:', values);
+
+        }
+    });
+</script>
+
+</html>

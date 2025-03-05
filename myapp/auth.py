@@ -1,0 +1,4 @@
+
+
+
+@auth.route('/signup')
