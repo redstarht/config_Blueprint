@@ -1,14 +1,140 @@
-from flask import Blueprint , render_template , request ,jsonify
-from .model import db,Accounts,Factory,Department,Section,Subsection,Production_line,Employees
+from flask import Blueprint, render_template, request, jsonify, redirect
+from .model import Accounts, Factory, Department, Section, Subsection, Production_line, Employees
+from myapp import db
 
-main_bp = Blueprint('main',__name__)
+main_bp = Blueprint('main', __name__)
+
+
+@main_bp.route('/api/tree', methods=['GET'])
+def get_tree():
+    factories = Factory.query.all()
+    # 返り値テスト
+    # confirm_json = []
+    # for factory in factories:
+    #     confirm_json.append(factory.to_dict())
+    # pprint.pprint(confirm_json)
+
+    return jsonify([factory.to_dict() for factory in factories])
+
+
+@main_bp.route('/api/subsections/<int:section_id>', methods=['GET', 'POST'])
+def manage_subsection(section_id):
+    if request.method == 'GET':
+        print(f"section_id={section_id}")
+        # 指定されたsection_idに紐づいた子係(subsections)を取得
+        subsections = Subsection.query.filter_by(section_id=section_id).all()
+
+        if not subsections:
+            print("データが見つかりませんでした[]を返します")
+            return jsonify([])
+
+        response = jsonify([sub.to_dict() for sub in subsections])
+        print(f"レスポンスデータ:{response.get_json}")
+        return response
+
+    # 更新・保存機能
+    elif request.method == 'POST':
+        data = request.json
+
+        if not data:
+            print("エラーです、リクエストデータがNone")
+            return jsonify({"error": "リクエストボディが空です"}, 400)
+
+        exsiting_subsections = Subsection.query.filter_by(
+            section_id=section_id).all()
+
+        # 既存データを更新 or 削除
+        for i, sub in enumerate(exsiting_subsections):
+            if i < len(data):
+                # キーエラー防止
+                sub.name = data[i].get('name', sub.name)
+            else:
+                # 余分なデータは削除
+                db.session.delete(sub)
+
+        # 新しいデータを追加
+        for i in range(len(exsiting_subsections), len(data)):
+            # section_id =flaskルーティング
+            new_sub = Subsection(section_id=section_id, name=data[i]['name'])
+            db.session.add(new_sub)
+
+        db.session.commit()
+        print(
+            f"更新後のsubsections:{[sub.to_dict() for sub in Subsection.query.filter_by(section_id=section_id).all()]}")
+        return jsonify({"message": "subsections updated successfully"})
+
 
 @main_bp.route('/')
 def index():
-    return render_template('index.html')
+    '''
+    HOMEは見る専の画面
+    工場➡係➡選択肢で 人員 / 異常内容 までツリービューで選択
+    人員 or 異常内容を選択したら、選択した内容を画面に表示する
+
+    '''
+    # print(f'{factories.name} {factories.code}')
+    # factoryclass = repr(factories)
+    # print(factoryclass)
+    # リスト内包表記　factories_dict = [factory.to_dict() for factory in factories]　
+
+    try:
+        factories = Factory.query.all()
+        print(f"取得した工場データ: {factories}")
 
 
-@main_bp.route('signup')
+    except Exception as e:
+        print(f"データ取得エラー: {e}")
+        return jsonify({"error": "データベースのクエリ実行時にエラーが発生しました"}), 500
+
+    factories_dict = [factory.to_dict() for factory in factories]  # JSON変換用
+    return render_template('index.html', factories=factories_dict)
+
+# @main_bp.route('/login',method=['GET','POST'])
 
 
+def login():
+    pass
 
+
+@main_bp.route('/edit_subsection')
+def edit_unit():
+    return render_template('edit_subsection.html')
+
+
+@main_bp.route('/departments/<int:factory_id>')
+def departments(factory_id):
+    departments = Department.query.filter_by(factory_id=factory_id).all()
+    return render_template('departments.html', departments=departments)
+
+
+@main_bp.route('/sections/<int:department_id>')
+def sections(department_id):
+    sections = Section.query.filter_by(department_id=department_id).all()
+    return render_template('sections.html', sections=sections)
+
+
+@main_bp.route('/subsections/<int:section_id>')
+def subsections(section_id):
+    subsections = Subsection.query.filter_by(section_id=section_id).all()
+    return render_template('subsections.html', subsections=subsections)
+
+
+@main_bp.route('/add_subsection/<int:section_id>', methods=['GET', 'POST'])
+def add_subsection(section_id):
+    if request.method == 'POST':
+        name = request.form['name']
+        new_subsection = Subsection(section_id=section_id, name=name)
+        db.session.add(new_subsection)
+        db.session.commit()
+        return redirect(url_for('subsections', section_id=section_id))
+    return render_template('add_subsection.html', section_id=section_id)
+
+
+@main_bp.route('/edit_subsection/<int:subsection_id>', methods=['GET', 'POST'])
+def edit_subsection(subsection_id):
+    subsection = Subsection.query.get_or_404(subsection_id)
+    if request.method == 'POST':
+        subsection.name = request.form['name']
+        db.session.commit()
+        return redirect(url_for('subsections', section_id=subsection.section_id))
+    return render_template('edit_subsection.html', subsection=subsection)

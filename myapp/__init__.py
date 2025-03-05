@@ -12,7 +12,8 @@ def create_app():
 
     # インスタンスフォルダのDBパス指定
     print(os.path.exists(os.path.join(app.instance_path, 'database.db')))
-
+    db_path = os.path.join(app.instance_path, 'database.db')
+    print(f"DBファイルが存在するか: {os.path.exists(db_path)}")
 
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'database.db')}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -21,7 +22,6 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app,db)
     # ルーティングを登録
-    from myapp.routes import main_bp
+    # from myapp.routes import main_bp
 
-
-    db.init_app(app)
+    return app

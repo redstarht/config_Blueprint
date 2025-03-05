@@ -36,7 +36,6 @@
                 <div class="logo-container mb-3">
                     <img src="./static/images/XC-Gate_logo.png" class="img-fluid" alt="logo">
                 </div>
-
                 <!-- 右側: ナビゲーションメニュー -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
@@ -48,8 +47,8 @@
                 <div class="collapse navbar-collapse justify-content-end navbar-index z-2 text-white"
                     id="navbarNavAltMarkup">
                     <div class="navbar-nav ">
-                        <a class="nav-link active" aria-current="page" href="{{ url_for('index') }}">ホーム</a>
-                        <a class="nav-link" href="{{ url_for('edit_unit') }}">係編集</a>
+                        <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">ホーム</a>
+                        <a class="nav-link" href="{{ url_for('main.edit_unit') }}">係編集</a>
                         <a class="nav-link" href="#">ライン編集</a>
                         <a class="nav-link" href="#">人員編集</a>
                         <a class="nav-link" href="#">異常内容編集</a>

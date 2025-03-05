@@ -9,7 +9,7 @@
         <h1>工場</h1>
         <ul>
             {% for factory in factories %}
-            <li><a href="{{ url_for('departments', factory_id=factory.id) }}">{{ factory.name }}</a></li>
+            <li><a href="{{ url_for('main.departments', factory_id=factory.id) }}">{{ factory.name }}</a></li>
             {% endfor %}
         </ul>
     </div>
