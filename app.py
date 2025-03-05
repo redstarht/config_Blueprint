@@ -248,9 +248,11 @@ def index():
     factories_dict = [factory.to_dict() for factory in factories]  # JSON変換用
     return render_template('index.html', factories=factories_dict)
 
-@app.route('/login',method=['GET','POST'])
+# @app.route('/login',method=['GET','POST'])
 def login():
     pass
+
+    
 
 
 
