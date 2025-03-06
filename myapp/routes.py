@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect
+from flask import Blueprint, render_template, request, jsonify, redirect,url_for
 from .model import Accounts, Factory, Department, Section, Subsection, Production_line, Employees
 from myapp import db
 
