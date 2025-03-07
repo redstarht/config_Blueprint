@@ -8,13 +8,19 @@ import re
 auth = Blueprint('auth',__name__)
 
 def is_email(input_text):
-    """入力がメールアドレス形式か判定"""
+    """
+    正規表現 確認
+    入力がメールアドレス形式か判定
+    """
     email_regex = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     return re.match(email_regex,input_text) is not None
 
 
 @auth.route('/login')
 def login():
+    if 'username' in session:
+        return redirect(url_for('main.index'))
+
     return render_template('login.html')
 
 @auth.route('/login',methods=['POST'])
@@ -32,7 +38,9 @@ def login_post():
         flash('ログインできませんでした、再入力して下さい')
         return redirect(url_for('auth.login'))
     
-    session['username']=request.form.get('username')
+    session['username']=Account.username
+    session['email']=Account.email
+
     login_user(Account)
     return redirect(url_for('main.index'))
 
@@ -61,5 +69,6 @@ def signup_post():
 @auth.route('/logout')
 @login_required
 def logout():
-    logout_user()
+    logout_user() #flask-loginのログアウト
+    session.clear() #Sessionを完全にクリア
     return redirect(url_for('auth.login'))

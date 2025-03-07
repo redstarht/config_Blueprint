@@ -53,7 +53,11 @@
                         <a class="nav-link" href="#">人員編集</a>
                         <a class="nav-link" href="#">異常内容編集</a>
                         <a class="nav-link" href="#">管理者画面</a>
-                        <a class="nav-link" href="{{ url_for('auth.logout') }}">ログアウト</a>
+                        {% if 'username' in session %}
+                            <a class="btn btn-primary" href="{{ url_for('auth.logout') }}">ログアウト</a>
+                        {% else %}
+                            <a class="btn btn-primary" href="{{ url_for('auth.login') }}">ログイン</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

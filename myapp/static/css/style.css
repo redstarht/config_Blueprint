@@ -46,6 +46,7 @@ z-index: 2;
     border-radius: 8px; /* 角を丸める */
 }
 
+
 /* ロゴ画像を中央配置 */
 .logo-container {
     position: absolute;
@@ -165,5 +166,11 @@ button:hover {
     .sidebar {
         margin-bottom: 20px;
     }
+
+}
+
+/* アカウントメアド注意 */
+small.text-muted{
+  font-size: 0.65rem;  
 
 }

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container d-flex justify-content-center align-items-center">
     <div class="card shadow p-4" style="width: 100%; max-width: 400px;">
-        <h3 class="text-center text-primary mb-4">サインアップ</h3>
+        <h3 class="text-center text-primary mb-4">アカウント新規作成</h3>
         
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -17,10 +17,11 @@
             <div class="mb-3">
                 <label class="form-label">メールアドレス (任意)</label>
                 <input type="email" name="email" class="form-control" placeholder="Email">
+                <small class="form-text text-muted">※ユーザー名の代わりにメールアドレスでもログインできるようになります</small>
             </div>
             
             <div class="mb-3">
-                <label class="form-label">ユーザー名</label>
+                <label class="form-label">ユーザー名(英数字のみ)</label>
                 <input type="text" name="username" class="form-control" placeholder="ユーザー名" required>
             </div>
             
@@ -29,7 +30,7 @@
                 <input type="password" name="password" class="form-control" placeholder="Password" required>
             </div>
             
-            <button type="submit" class="btn btn-primary w-100">サインアップ</button>
+            <button type="submit" class="btn btn-primary w-100">サインアップ(新規登録)</button>
         </form>
     </div>
 </div>

@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request, jsonify, redirect,url_for
+from flask import Blueprint, render_template, request, jsonify, redirect,url_for,session
 from .model import Accounts, Factory, Department, Section, Subsection, Production_line, Employees
 from myapp import db
+from flask_login import login_user,logout_user,login_required
 
 main_bp = Blueprint('main', __name__)
 
@@ -66,6 +67,9 @@ def manage_subsection(section_id):
 
 @main_bp.route('/')
 def index():
+    if 'username' not in session:
+        return redirect(url_for('auth.login'))
+
     '''
     HOMEは見る専の画面
     工場➡係➡選択肢で 人員 / 異常内容 までツリービューで選択
@@ -92,11 +96,9 @@ def index():
 # @main_bp.route('/login',method=['GET','POST'])
 
 
-def login():
-    pass
-
 
 @main_bp.route('/edit_subsection')
+@login_required
 def edit_unit():
     return render_template('edit_subsection.html')
 
