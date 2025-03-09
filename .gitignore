@@ -2,3 +2,4 @@
 *.db
 .env
 /XC-Gate_logo.png
+__pycache__/

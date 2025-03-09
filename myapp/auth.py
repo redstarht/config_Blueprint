@@ -40,6 +40,7 @@ def login_post():
     
     session['username']=Account.username
     session['email']=Account.email
+    session['role']=Account.role
 
     login_user(Account)
     return redirect(url_for('main.index'))
