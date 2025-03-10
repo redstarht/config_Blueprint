@@ -37,27 +37,39 @@ def manage_subsection(section_id):
     elif request.method == 'POST':
         data = request.json
 
+        
+        
+
         if not data:
             print("エラーです、リクエストデータがNone")
             return jsonify({"error": "リクエストボディが空です"}, 400)
+        
+        # リクエスト(reqeuest.json)からIDリストを取得
+        incoming_ids = [item.get('id') for item in data if 'id' in item]
 
         exsiting_subsections = Subsection.query.filter_by(
             section_id=section_id).all()
-
+        
         # 既存データを更新 or 削除
-        for i, sub in enumerate(exsiting_subsections):
-            if i < len(data):
-                # キーエラー防止
-                sub.name = data[i].get('name', sub.name)
+        for sub in exsiting_subsections:
+            match_data=next((item for item in data if str(item.get('id'))==str(sub.id)),None)
+            if match_data:
+                sub.name = match_data.get('name',sub.name)
+                sub.updated_by = match_data.get('updated_by',sub.updated_by)
             else:
-                # 余分なデータは削除
                 db.session.delete(sub)
 
-        # 新しいデータを追加
-        for i in range(len(exsiting_subsections), len(data)):
-            # section_id =flaskルーティング
-            new_sub = Subsection(section_id=section_id, name=data[i]['name'])
-            db.session.add(new_sub)
+
+        # 新しいデータを追加（idが返り値でなかったら新規登録する)
+        for item in data:
+            if 'id' not in item:
+                new_sub=Subsection(
+                    section_id=section_id,
+                    name=item.get('name'),
+                    created_by=item.get('created_by'),
+                    updated_by=item.get('updated_by')
+                )
+                db.session.add(new_sub)
 
         db.session.commit()
         print(
@@ -101,6 +113,11 @@ def index():
 @login_required
 def edit_unit():
     return render_template('edit_subsection.html')
+
+@main_bp.route('/edit_employee')
+@login_required
+def edit_employee():
+    return render_template('edit_employee.html')
 
 
 @main_bp.route('/departments/<int:factory_id>')

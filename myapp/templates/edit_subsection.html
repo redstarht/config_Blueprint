@@ -45,7 +45,7 @@
                                 <small id="createdAt{{i}}" class="text-muted"></small>
                                 <small id="createdBy{{i}}" class="text-muted"></small>
                                 <small id="updatedAt{{i}}" class="text-muted"></small>
-                                <small id="updateBy{{i}}" class="text-muted"></small>
+                                <small id="updatedBy{{i}}" class="text-muted"></small>
                             </div>
                             {% endfor %}
                             <button type='button' id="saveButton" class="btn btn-primary"
@@ -60,6 +60,25 @@
     {% endblock %}
 </body>
 {% block scripts %}
+
+<!-- Sessionの読み込み -->
+<script type="module">
+    import { fetchSessionData } from "/static/js/session.js";
+
+    window.sessionData = null;
+
+    async function loadSessionData(){
+        window.sessionData = await fetchSessionData();
+        console.log(`session{username:${window.sessionData.username}
+                    role:${window.sessionData.role}
+                    email:${window.sessionData.email}}`);
+    }
+
+    loadSessionData();
+    
+            
+</script>
+
 <script>
     let test = null;
     document.addEventListener('DOMContentLoaded', () => {
@@ -263,7 +282,7 @@
             .catch(error => console.error('subsectionsの取得エラー:', error));
     }
 
-    // フォームを更新（データがない場合でも要素が消えないようにする）
+    // 係の各データを読み込み・フォーム書き出し（データがない場合でも要素が消えないようにする）
     function updateSubsectionForm(subsections) {
         for (let i = 1; i <= 5; i++) {
             const input = document.getElementById(`item${i}`);
@@ -271,7 +290,7 @@
             const createdAt = document.getElementById(`createdAt${i}`);
             const createdBy = document.getElementById(`createdBy${i}`);
             const updatedAt = document.getElementById(`updatedAt${i}`);
-            const UpdatedBy = document.getElementById(`updatedBy${i}`);
+            const updatedBy = document.getElementById(`updatedBy${i}`);
 
 
             if (!input || !subsectionID || !createdAt || !updatedAt) {
@@ -282,16 +301,18 @@
                 input.value = subsections[i - 1].name;
                 subsectionID.dataset.subsectionID = subsections[i -1].id  || '';
                 subsectionID.textContent=`SubsectionID: ${subsections[i - 1].id || '未定義'} `;
-                createdAt.textContent = `作成: ${subsections[i - 1].created_at || '不明'}`;
-                updatedAt.textContent = `更新: ${subsections[i - 1].updated_at || '未更新'}`;
+                createdAt.textContent = `/ 作成: ${subsections[i - 1].created_at || '不明'}`;
+                createdBy.textContent = `/ 作成者: ${subsections[i - 1].created_by || 'ユーザー不明'}`;
+                updatedAt.textContent = `/ 更新: ${subsections[i - 1].updated_at || '未更新'}`;
+                updatedBy.textContent = `/ 更新者:${subsections[i -1 ].updated_by || 'ユーザー不明'}`;
             } else {
                 input.value = '';
                 subsectionID.dataset.subsectionID = '';
                 subsectionID.textContent=`SubsectionID: -`;
-                createdAt.textContent = '作成: -';
-                createdBy.textContent = '作成者: -';
-                updatedAt.textContent = '更新: -';
-                updatedBy.textContent = '更新者: -';
+                createdAt.textContent = '/ 作成: -';
+                createdBy.textContent = '/ 作成者: -';
+                updatedAt.textContent = '/ 更新: -';
+                updatedBy.textContent = '/ 更新者: -';
             }
         }
     }
@@ -315,6 +336,8 @@
 
             let name = input.value.trim();
             const id = subsectionID.dataset.subsectionID;
+            let created_by = window.sessionData.username;
+            let updated_by = window.sessionData.username;
             
             if(subsectionID.dataset.subsectionID){
                 if(!input.value){
@@ -324,10 +347,10 @@
 
             // 既存データをID保持したまま送信(nameが空でも送る)
             if (id) {
-                subsections.push({ id,name });
+                subsections.push({ id,name,updated_by});
             // 新規データはnameがある場合のみ送る
             }else if (name){
-                subsections.push({name});
+                subsections.push({name,created_by});
             }
         }
 

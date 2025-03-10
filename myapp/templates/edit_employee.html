@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+{% extends "base.html" %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ライン編集</title>
+</head>
+{% block content %}
+<body>
+    {% block containar_fluid %}
+    <div>
+        <button id="test">
+            テストボタン
+        </button>
+    </div>
+    <div class="containar-fluid">
+        <div class="row mt-4">
+            <div class="col-12 col-md-5 col-lg-3 sidebar">
+                <div class="card">
+                    <div class="card-header">
+                        拠点/部/課/係
+                    </div>
+                    <div class="card-body">
+                        <ul class="tree-view" id="treeView"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 入力フォーム -->
+            <div class="col-12 col-md-7 col-lg-9 ">
+                <div class="card">
+                    <div class="card-header card-header-title" id="cardtitle">
+                        選択した係に所属するラインを編集
+                    </div>
+
+                    <div class="card-body">
+                        <form action="" id="editform" style="display: none;">
+                            {% for i in range(1,31) %}
+                            <div class="mb-3">
+                                <div class="d-flex gap-2">
+                                    <div>
+                                        <label for="line{{i}}" class="form-label">ライン{{ i }}</label>
+                                        <input type="text" class="form-control" id="line{{i}}" name="line{{i}}">
+                                    </div>
+                                    <div>
+                                        <label for="lineCode{{i}}" class="form-label">ラインコード{{ i }}</label>
+                                        <input type="text" class="form-control" id="lineCode{{i}}" name="lineCode{{i}}">
+                                    </div>
+                                    <div>
+                                        <label for="displayOrder{{i}}" class="form-label">表示順{{ i }}</label>
+                                        <input type="number" class="form-control" id="displayOrder{{i}}" name="displayOrder{{i}}">
+                                    </div>
+                                </div>
+
+                                <small id="lineID{{i}}" class="text-muted"></small>
+                                <small id="createdAt{{i}}" class="text-muted"></small>
+                                <small id="createdBy{{i}}" class="text-muted"></small>
+                                <small id="updatedAt{{i}}" class="text-muted"></small>
+                                <small id="updatedBy{{i}}" class="text-muted"></small>
+                            </div>
+                            {% endfor %}
+                            <button type='button' id="saveButton" class="btn btn-primary" style="display: none;">保存</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+</body>
+{% endblock %}
+<script>
+    let test = null;
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log(document.getElementById('saveButton'));
+        fetchTreeData();
+    });
+
+    function fetchTreeData() {
+        fetch('/api/tree')
+            .then(response => response.json())
+            .then(data => {
+                console.log('取得したデータ:', JSON.stringify(data, null, 2));
+                test = data;
+                buildTreeView(data);
+            })
+            .catch(error => console.error('データ取得エラー', error));
+    }
+
+    function buildTreeView(factories) {
+        const treeView = document.getElementById('treeView');
+        treeView.innerHTML = '';
+
+        factories.forEach(factory => {
+            const factoryNode = createFactoryNode(factory);
+            treeView.appendChild(factoryNode);
+        });
+    }
+
+    function createFactoryNode(factory) {
+        const li = document.createElement('li');
+        const div = createTreeItem(factory.name);
+        const ul = document.createElement('ul');
+        ul.style.display = 'none';
+
+        factory.departments.forEach(department => {
+            const departmentNode = createDepartmentNode(department);
+            ul.appendChild(departmentNode);
+        });
+
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleTree(ul, div);
+        });
+
+        li.appendChild(div);
+        li.appendChild(ul);
+        return li;
+    }
+
+    function createDepartmentNode(department) {
+        const li = document.createElement('li');
+        const div = createTreeItem(department.name);
+        const ul = document.createElement('ul');
+        ul.style.display = 'none';
+
+        department.sections.forEach(section => {
+            const sectionNode = createSectionNode(section);
+            ul.appendChild(sectionNode);
+        });
+
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleTree(ul, div);
+        });
+
+        li.appendChild(div);
+        li.appendChild(ul);
+        return li;
+    }
+
+    function createSectionNode(section) {
+        const li = document.createElement('li');
+        const div = createTreeItem(section.name);
+        const ul = document.createElement('ul');
+        ul.style.display = 'none';
+
+        section.subsections.forEach(subsection => {
+            const subsectionNode = createTreeItem(subsection.name);
+            ul.appendChild(subsectionNode);
+        });
+
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleTree(ul, div);
+        });
+
+        li.appendChild(div);
+        li.appendChild(ul);
+        return li;
+    }
+
+    function createTreeItem(name) {
+        const div = document.createElement('div');
+        div.className = 'tree-item';
+        div.innerHTML = `<i class="bi bi-caret-right-fill me-2"></i>${name}`;
+        return div;
+    }
+
+    function toggleTree(ul, div) {
+        const icon = div.querySelector('i');
+        ul.style.display = ul.style.display === 'none' ? 'block' : 'none';
+        icon.className = ul.style.display === 'none' ? 'bi bi-caret-right-fill me-2' : 'bi bi-caret-down-fill me-2';
+    }
+
+
+</script>
+{% block scripts %}
+{% endblock %}
+</html>

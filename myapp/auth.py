@@ -1,4 +1,4 @@
-from flask import Blueprint,render_template,redirect,url_for,request,flash,session
+from flask import Blueprint,render_template,redirect,url_for,request,flash,session,jsonify
 from werkzeug.security import generate_password_hash,check_password_hash
 from .model import Accounts
 from flask_login import login_user,logout_user,login_required
@@ -37,13 +37,29 @@ def login_post():
     if not Account or not check_password_hash(Account.password_hash,password):
         flash('ログインできませんでした、再入力して下さい')
         return redirect(url_for('auth.login'))
-    
+    # ログイン完了後にセッション状態をクライアントPCに保存
+    session['id']=Account.id
     session['username']=Account.username
     session['email']=Account.email
     session['role']=Account.role
+    session['is_deteled']=Account.is_deleted
+    session['display_name']=Account.display_name
+
 
     login_user(Account)
     return redirect(url_for('main.index'))
+
+@auth.route('/session-data',methods=['GET'])
+def get_session_data():
+    if 'username' in session:
+        return jsonify({
+            'id':session.get('id'),
+            'username':session.get('username'),
+            'email':session.get('email'),
+            'role':session.get('role'),
+        })
+    else:
+        return jsonify({'error':'No session data'}),401
 
 @auth.route('/signup')
 def signup():
