@@ -106,6 +106,9 @@ class Subsection(db.Model):
             timezone(timedelta(hours=9))),
         onupdate=lambda: datetime.now(timezone(timedelta(hours=9)))
     )
+    production_lines = db.relationship('Production_line',backref='subsection',lazy=True)
+    employees = db.relationship('Employee',backref='subsection',lazy=True)
+
 
     def to_dict(self):
         return {
@@ -118,7 +121,9 @@ class Subsection(db.Model):
             'created_by': self.created_by,
             'updated_by': self.created_by,
             'created_at': self.created_at.strftime('%Y-%m-%d %H:%M:%S') if self.created_at else None,
-            'updated_at': self.updated_at.strftime('%Y-%m-%d %H:%M:%S') if self.updated_at else None
+            'updated_at': self.updated_at.strftime('%Y-%m-%d %H:%M:%S') if self.updated_at else None,
+            'production_lines': [prod_line.to_dict() for prod_line in self.production_lines],
+            'employees': [employee.to_dict() for employee in self.employees]
         }
 
 
@@ -156,7 +161,7 @@ class Production_line(db.Model):
         }
 
 
-class Employees(db.Model):
+class Employee(db.Model):
     __tablename__ = 'employees'
     id = db.Column(db.Integer, primary_key=True)
     subsection_id = db.Column(db.Integer, db.ForeignKey(
