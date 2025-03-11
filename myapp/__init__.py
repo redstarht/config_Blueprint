@@ -41,6 +41,7 @@ def create_app():
     app.register_blueprint(auth)
     from myapp.routes import main_bp
     app.register_blueprint(main_bp)
+    
 
     # 拡張機能をアプリに登録
     db.init_app(app)
