@@ -43,9 +43,9 @@
                                 <input for="text" class="form-control" id="item{{i}}" name="item{{i}}">
                                 <small id="subsectionID{{i}}" class="text-muted"></small>
                                 <small id="createdAt{{i}}" class="text-muted"></small>
-                                <small id="createdBy{{i}}" class="text-muted"></small>
+                                <small id="creator{{i}}" class="text-muted"></small>
                                 <small id="updatedAt{{i}}" class="text-muted"></small>
-                                <small id="updatedBy{{i}}" class="text-muted"></small>
+                                <small id="updater{{i}}" class="text-muted"></small>
                             </div>
                             {% endfor %}
                             <button type='button' id="saveButton" class="btn btn-primary"
@@ -69,7 +69,8 @@
 
     async function loadSessionData(){
         window.sessionData = await fetchSessionData();
-        console.log(`session{username:${window.sessionData.username}
+        console.log(`session{id:${window.sessionData.id}
+                    session{username:${window.sessionData.username}
                     role:${window.sessionData.role}
                     email:${window.sessionData.email}}`);
     }
@@ -288,9 +289,9 @@
             const input = document.getElementById(`item${i}`);
             const subsectionID = document.getElementById(`subsectionID${i}`);
             const createdAt = document.getElementById(`createdAt${i}`);
-            const createdBy = document.getElementById(`createdBy${i}`);
+            const creator = document.getElementById(`creator${i}`);
             const updatedAt = document.getElementById(`updatedAt${i}`);
-            const updatedBy = document.getElementById(`updatedBy${i}`);
+            const updater = document.getElementById(`updater${i}`);
 
 
             if (!input || !subsectionID || !createdAt || !updatedAt) {
@@ -302,17 +303,17 @@
                 subsectionID.dataset.subsectionID = subsections[i -1].id  || '';
                 subsectionID.textContent=`SubsectionID: ${subsections[i - 1].id || '未定義'} `;
                 createdAt.textContent = `/ 作成: ${subsections[i - 1].created_at || '不明'}`;
-                createdBy.textContent = `/ 作成者: ${subsections[i - 1].created_by || 'ユーザー不明'}`;
+                creator.textContent = `/ 作成者: ${subsections[i - 1].created_by_username || 'ユーザー不明'}`;
                 updatedAt.textContent = `/ 更新: ${subsections[i - 1].updated_at || '未更新'}`;
-                updatedBy.textContent = `/ 更新者:${subsections[i -1 ].updated_by || 'ユーザー不明'}`;
+                updater.textContent = `/ 更新者:${subsections[i -1 ].updated_by_username || 'ユーザー不明'}`;
             } else {
                 input.value = '';
                 subsectionID.dataset.subsectionID = '';
                 subsectionID.textContent=`SubsectionID: -`;
                 createdAt.textContent = '/ 作成: -';
-                createdBy.textContent = '/ 作成者: -';
+                creator.textContent = '/ 作成者: -';
                 updatedAt.textContent = '/ 更新: -';
-                updatedBy.textContent = '/ 更新者: -';
+                updater.textContent = '/ 更新者: -';
             }
         }
     }
@@ -336,8 +337,8 @@
 
             let name = input.value.trim();
             const id = subsectionID.dataset.subsectionID;
-            let created_by = window.sessionData.username;
-            let updated_by = window.sessionData.username;
+            let created_by = window.sessionData.id;
+            let updated_by = window.sessionData.id;
             
             if(subsectionID.dataset.subsectionID){
                 if(!input.value){
