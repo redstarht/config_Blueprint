@@ -232,7 +232,7 @@
         // 係を選択した時に対象のitemを表示
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSection(section.id, section.name, div, factoryName, departmentName);
+            selectSection(div,subsection.id, subsection.name, factoryName, departmentName,sectionName);
         });
 
         li.appendChild(div);
@@ -261,10 +261,7 @@
     }
 
     // 課を選択したときの処理
-    function selectSection(sectionId, sectionName, selectedElement, factoryName, departmentName) {
-        // 課名をヘッダーに反映
-        console.log(factoryName.name, departmentName.name, sectionName);
-        console.log(factoryName, departmentName, sectionName);
+    function selectSection(selectedElement,subsectionId, subsectionName,  factoryName, departmentName,sectionName) {
 
         // オブジェクト型かどうか精査
         if (typeof factoryName === "object" && factoryName !== null) {
@@ -279,8 +276,8 @@
         }
 
 
-        const titleElement = [factoryTitle, departmentTitle, sectionName].filter(Boolean);
-        document.getElementById('cardtitle').textContent = `「${titleElement.join('/')}」に所属する係を編集`;
+        const titleElement = [factoryTitle, departmentTitle, sectionName,subsectionName].filter(Boolean);
+        document.getElementById('cardtitle').textContent = `「${titleElement.join('/')}」に所属するラインを編集`;
 
         // 選択状態のリセット
         clearActiveTreeItems();
@@ -293,11 +290,11 @@
         document.getElementById('saveButton').style.display = 'block';
 
         // 保存ボタンに section_id をセット
-        console.log(sectionId);
-        document.getElementById('saveButton').dataset.sectionId = sectionId;
+        console.log(subsectionId);
+        document.getElementById('saveButton').dataset.subsectionId = subsectionId;
 
-        // APIから係のデータを取得
-        fetchSubsections(sectionId);
+        // APIから所属ラインのデータを取得
+        fetchProductionLines(subsectionId);
     }
 
     // ツリー内の選択ハイライトをクリア

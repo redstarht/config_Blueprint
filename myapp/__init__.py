@@ -1,13 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+
 from dotenv import load_dotenv
 import os
 from flask_login import LoginManager
+from .api import register_api
+from .extensions import db , migrate 
 
 
-db = SQLAlchemy()
-migrate = Migrate()
+
 
 
 def create_app():
@@ -24,6 +25,10 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'database.db')}"
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # 拡張機能をアプリに登録
+    db.init_app(app)
+    migrate.init_app(app,db)
+
     login_manager=LoginManager()
     login_manager.login_view='auth.login'
     login_manager.init_app(app)
@@ -33,6 +38,7 @@ def create_app():
     def load_user(id):
         return Accounts.query.get(int(id))
     
+    register_api(app)
     
 
 
@@ -43,9 +49,8 @@ def create_app():
     app.register_blueprint(main_bp)
     
 
-    # 拡張機能をアプリに登録
-    db.init_app(app)
-    migrate.init_app(app,db)
+
+
     # ルーティングを登録
     # from myapp.routes import main_bp
 

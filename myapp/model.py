@@ -1,6 +1,6 @@
 
 from flask_sqlalchemy import SQLAlchemy
-from . import db
+from .extensions import db
 from flask_login import UserMixin
 from datetime import datetime, timezone, timedelta
 import os
