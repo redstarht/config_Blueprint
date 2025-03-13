@@ -32,8 +32,8 @@
             <div class="col-12 col-md-7 col-lg-9 ">
                 <div class="card">
                     <div class="card-header card-header-title" id="cardtitle">
-                        <div>選択した係に所属するラインを編集</div>
-                        <div>(※異常内容設定ラインのみ)</div>
+                        <div id="cardtitle-main">選択した係に所属するラインを編集</div>
+                        <div class="ms-5">(※異常内容設定ラインのみ登録)</div>
                     </div>
 
                     <div class="card-body">
@@ -209,7 +209,7 @@
         .sort((a,b)=> a.sort_order - b.sort_order);
 
         sortedsubsections.forEach(subsection => {
-            const subsectionNode = createSubsectionNode(subsection,factoryName,department.name,section.name);
+            const subsectionNode = createSubsectionNode(subsection,factoryName,departmentName,section.name);
             ul.appendChild(subsectionNode);
 
         });
@@ -220,10 +220,11 @@
         });
         li.appendChild(div);
         li.appendChild(ul);
+        return li
 
     }
 
-    // 課（section）ノードを作成
+    // 係（subsection）ノードを作成
     function createSubsectionNode(subsection, factoryName, departmentName,sectionName) {
         const li = document.createElement('li');
         const div = createTreeItem(subsection.name);
@@ -278,7 +279,7 @@
 
 
         const titleElement = [factoryTitle, departmentTitle, sectionName,subsectionName].filter(Boolean);
-        document.getElementById('cardtitle').textContent = `「${titleElement.join('/')}」に所属するラインを編集`;
+        document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」に所属するラインを編集`;
 
         // 選択状態のリセット
         clearActiveTreeItems();
