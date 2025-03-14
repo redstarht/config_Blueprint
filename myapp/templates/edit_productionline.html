@@ -43,7 +43,7 @@
                                 <div class="d-flex gap-2">
                                     <div>
                                         <label for="line{{i}}" class="form-label">ライン{{ i }}</label>
-                                        <input type="text" class="form-control" id="line{{i}}" name="line{{i}}">
+                                        <input type="text" class="form-control" id="lineName{{i}}" name="lineName{{i}}">
                                     </div>
                                     <div>
                                         <label for="lineCode{{i}}" class="form-label">ラインコード{{ i }}</label>
@@ -81,7 +81,7 @@
 
     window.sessionData = null;
 
-    async function loadSessionData(){
+    async function loadSessionData(){   
         window.sessionData = await fetchSessionData();
         console.log(`session{id:${window.sessionData.id}
                     session{username:${window.sessionData.username}
@@ -279,7 +279,7 @@
 
 
         const titleElement = [factoryTitle, departmentTitle, sectionName,subsectionName].filter(Boolean);
-        document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」に所属するラインを編集`;
+        document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」`;
 
         // 選択状態のリセット
         clearActiveTreeItems();
@@ -291,7 +291,7 @@
         document.getElementById('editform').style.display = 'block';
         document.getElementById('saveButton').style.display = 'block';
 
-        // 保存ボタンに section_id をセット
+        // 保存ボタンに subsection_id をセット
         console.log(subsectionId);
         document.getElementById('saveButton').dataset.subsectionId = subsectionId;
 
@@ -309,46 +309,47 @@
 
     // 係データを取得して表示
     function fetchProductionLines(subsectionId) {
-        fetch(`/api/subsections/${sectionId}`)
+        fetch(`/api/productionlines/${subsectionId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTPエラー! ステータス: ${response.status}`);
                 }
                 return response.json();
             })
-            .then(subsections => {
-                updateSubsectionForm(subsections);
+            .then(productionLines => {
+                console.log(productionLines)
+                updateSubsectionForm(productionLines);
             })
             .catch(error => console.error('subsectionsの取得エラー:', error));
     }
 
     // 係の各データを読み込み・フォーム書き出し（データがない場合でも要素が消えないようにする）
-    function updateSubsectionForm(subsections) {
+    function updateSubsectionForm(productionLines) {
         for (let i = 1; i <= 5; i++) {
-            const input = document.getElementById(`item${i}`);
-            const subsectionID = document.getElementById(`subsectionID${i}`);
+            const input = document.getElementById(`lineName${i}`);
+            const lineID = document.getElementById(`lineID${i}`);
             const createdAt = document.getElementById(`createdAt${i}`);
             const creator = document.getElementById(`creator${i}`);
             const updatedAt = document.getElementById(`updatedAt${i}`);
             const updater = document.getElementById(`updater${i}`);
 
-
-            if (!input || !subsectionID || !createdAt || !updatedAt) {
+            // 要素が未定義であればスキップ
+            if (!input || !lineID || !createdAt || !updatedAt) {
                 continue;
             }
 
-            if (subsections[i - 1]) {
-                input.value = subsections[i - 1].name;
-                subsectionID.dataset.subsectionID = subsections[i -1].id  || '';
-                subsectionID.textContent=`SubsectionID: ${subsections[i - 1].id || '未定義'} `;
-                createdAt.textContent = `/ 作成: ${subsections[i - 1].created_at || '不明'}`;
-                creator.textContent = `/ 作成者: ${subsections[i - 1].created_by_username || 'ユーザー不明'}`;
-                updatedAt.textContent = `/ 更新: ${subsections[i - 1].updated_at || '未更新'}`;
-                updater.textContent = `/ 更新者:${subsections[i -1 ].updated_by_username || 'ユーザー不明'}`;
+            if (productionLines[i - 1]) {
+                input.value = productionLines[i - 1].name;
+                lineID.dataset.lineID = productionLines[i -1].id  || '';
+                lineID.textContent=`lineID: ${productionLines[i - 1].id || '未定義'} `;
+                createdAt.textContent = `/ 作成: ${productionLines[i - 1].created_at || '不明'}`;
+                creator.textContent = `/ 作成者: ${productionLines[i - 1].created_by_username || 'ユーザー不明'}`;
+                updatedAt.textContent = `/ 更新: ${productionLines[i - 1].updated_at || '未更新'}`;
+                updater.textContent = `/ 更新者:${productionLines[i -1 ].updated_by_username || 'ユーザー不明'}`;
             } else {
                 input.value = '';
-                subsectionID.dataset.subsectionID = '';
-                subsectionID.textContent=`SubsectionID: -`;
+                lineID.dataset.lineID = '';
+                lineID.textContent=`lineID: -`;
                 createdAt.textContent = '/ 作成: -';
                 creator.textContent = '/ 作成者: -';
                 updatedAt.textContent = '/ 更新: -';
@@ -359,27 +360,27 @@
 
     // 保存ボタン処理
     document.getElementById('saveButton').addEventListener('click', () => {
-        const sectionId = document.getElementById('saveButton').dataset.sectionId;
+        const subsectionId = document.getElementById('saveButton').dataset.subsectionId;
 
-        if (!sectionId) {
-            console.error("エラー: sectionIdが取得できませんでした");
-            alert("エラー: sectionIdが未設定です");
+        if (!subsectionId) {
+            console.error("エラー: subsectionIdが取得できませんでした");
+            alert("エラー: subsectionIdが未設定です");
             return;
         }
 
-        const subsections = [];
+        const productionLines = [];
         for (let i = 1; i <= 5; i++) {
-            const input = document.getElementById(`item${i}`);
-            const subsectionID = document.getElementById(`subsectionID${i}`);
+            const input = document.getElementById(`lineName${i}`);
+            const lineID = document.getElementById(`lineID${i}`);
 
-            if(!input || !subsectionID) continue;
+            if(!input || !lineID) continue;
 
             let name = input.value.trim();
-            const id = subsectionID.dataset.subsectionID;
+            const id = lineID.dataset.lineID;
             let created_by = window.sessionData.id;
             let updated_by = window.sessionData.id;
             
-            if(subsectionID.dataset.subsectionID){
+            if(lineID.dataset.lineID){
                 if(!input.value){
                 name='';
                 }
@@ -387,22 +388,22 @@
 
             // 既存データをID保持したまま送信(nameが空でも送る)
             if (id) {
-                subsections.push({ id,name,updated_by});
+                productionLines.push({ id,name,updated_by});
             // 新規データはnameがある場合のみ送る
             }else if (name){
-                subsections.push({name,created_by});
+                productionLines.push({name,created_by});
             }
         }
 
-        saveSubsections(sectionId, subsections);
+        saveproductionLines(subsectionId, productionLines);
     });
 
     // 係データを保存
-    function saveSubsections(sectionId, subsections) {
-        fetch(`/api/subsections/${sectionId}`, {
+    function saveproductionLines(subsectionId, productionLines) {
+        fetch(`/api/productionlines/${subsectionId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(subsections)
+            body: JSON.stringify(productionLines)
         })
             .then(response => {
                 if (!response.ok) {
@@ -413,7 +414,7 @@
             .then(data => {
                 console.log('保存成功:', data);
                 alert('保存しました');
-                fetchSubsections(sectionId); // 保存後にデータを再取得
+                fetchProductionLines(subsectionId); // 保存後にデータを再取得
             })
             .catch(error => {
                 console.error('保存エラー', error);

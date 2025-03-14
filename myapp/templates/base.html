@@ -56,8 +56,8 @@
                     <div class="navbar-nav ">
                         <a class="nav-link active" aria-current="page" href="{{ url_for('main.index') }}">ホーム</a>
                         <a class="nav-link" href="{{ url_for('main.edit_unit') }}">係編集</a>
-                        <a class="nav-link" href="{{ url_for('main.edit_employee') }}">ライン編集</a>
-                        <a class="nav-link" href="#">人員編集</a>
+                        <a class="nav-link" href="{{ url_for('main.edit_productionline') }}">ライン編集</a>
+                        <a class="nav-link" href="{{ url_for('main.edit_employee') }}">人員編集</a>
                         <a class="nav-link" href="#">異常内容編集</a>
                         <a class="nav-link" href="#">管理者画面</a>
                         {% if 'username' in session %}

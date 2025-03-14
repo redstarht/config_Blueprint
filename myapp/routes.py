@@ -119,6 +119,11 @@ def edit_unit():
 def edit_employee():
     return render_template('edit_employee.html')
 
+@main_bp.route('/edit_productionline')
+@login_required
+def edit_productionline():
+    return render_template('edit_productionline.html')
+
 
 @main_bp.route('/departments/<int:factory_id>')
 def departments(factory_id):
