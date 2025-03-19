@@ -1,4 +1,9 @@
 export async function fetchSessionData(){
+    ```
+    PCキャッシュに保存されているセッションデータを読み込み
+    返り値で返す、エラーならエラーメッセージを返す
+
+    ```
     try{
         const respose =await fetch('/session-data');
         const data = await respose.json();

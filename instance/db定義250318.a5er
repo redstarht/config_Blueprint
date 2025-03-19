@@ -1,0 +1,199 @@
+﻿# A5:ER FORMAT:19
+# A5:ER ENCODING:UTF8
+# A5:ER Mk-1 Copyright © 2007 m.matsubara
+# A5:SQL Mk-2 Version 2.20.2 Copyright © 1997 - 2025 m.matsubara
+#  https://a5m2.mmatsubara.com
+
+[Manager]
+ProjectName=
+Author=
+MaxEntityRowShow=1000
+ReadOnlyRecommend=0
+Page=Main
+PageInfo="Main",6,"A3Landscape",$FFFFFF
+LogicalView=1
+DecodeDomain=0
+ViewModePageIndividually=1
+ViewMode=6
+ViewFormat=0
+UseNondependenceDashLine=0
+FontName=Tahoma
+FontSize=6
+PaperSize=A4Landscape
+HeaderLeft=
+HeaderCenter=
+HeaderRight=
+FooterLeft=
+FooterCenter=
+FooterRight=
+ShowPageoutRelation=1
+DefaultPkName=%0:s_PKC
+DefaultPkIndexName=%0:s_PKI
+DefaultIndexName=%0:s_IX%1:d
+DefaultFkName=%0:s_FK%1:d
+SqlSeparator=0
+UpperCaseKeyword=0
+ShowTag=1
+ShowCommonAttributes=0
+BugFixEntityWidth=1
+
+[Entity]
+PName=production_lines
+LName=production_lines
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=1200
+Top=300
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="subsection_id","subsection_id","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="name","name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="code","code","VARCHAR(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="sort_order","sort_order","INTEGER",,,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_by","created_by","INTEGER",,,"","",$FFFFFFFF,""
+Field="updated_by","updated_by","INTEGER",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","DATETIME",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","DATETIME",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1200,300
+ZOrder=-5
+
+[Entity]
+PName=sections
+LName=sections
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=1950
+Top=950
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="department_id","department_id","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="name","name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="sort_order","sort_order","INTEGER",,,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1950,950
+ZOrder=-6
+
+[Entity]
+PName=subsections
+LName=subsections
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=1850
+Top=400
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="section_id","section_id","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="name","name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="code","code","VARCHAR(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="sort_order","sort_order","INTEGER",,,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_by","created_by","INTEGER",,,"","",$FFFFFFFF,""
+Field="updated_by","updated_by","INTEGER",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","DATETIME",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","DATETIME",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1850,400
+ZOrder=-7
+
+[Entity]
+PName=factories
+LName=factories
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=750
+Top=600
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="name","name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="sort_order","sort_order","INTEGER",,,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",750,600
+ZOrder=-4
+
+[Entity]
+PName=accounts
+LName=accounts
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=150
+Top=550
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="username","username","VARCHAR(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="password_hash","password_hash","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="email","email","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="display_name","display_name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="role","role","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_at","created_at","DATETIME",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","DATETIME",,,"","",$FFFFFFFF,""
+Index=sqlite_autoindex_accounts_2=1,email
+Index=sqlite_autoindex_accounts_1=1,username
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",150,550
+ZOrder=-1
+
+[Entity]
+PName=departments
+LName=departments
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=450
+Top=1050
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="factory_id","factory_id","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="name","name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="sort_order","sort_order","INTEGER",,,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",450,1050
+ZOrder=-2
+
+[Entity]
+PName=employees
+LName=employees
+Comment=
+TableInnerOption=
+TableOption=
+Page=Main
+Left=1000
+Top=950
+Field="id","id","INTEGER","NOT NULL",0,"","",$FFFFFFFF,""
+Field="subsection_id","subsection_id","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="name","name","VARCHAR(100)","NOT NULL",,"","",$FFFFFFFF,""
+Field="code","code","VARCHAR(50)","NOT NULL",,"","",$FFFFFFFF,""
+Field="position_id","position_id","INTEGER","NOT NULL",,"","",$FFFFFFFF,""
+Field="sort_order","sort_order","INTEGER",,,"","",$FFFFFFFF,""
+Field="is_deleted","is_deleted","BOOLEAN","NOT NULL",,"","",$FFFFFFFF,""
+Field="created_by","created_by","INTEGER",,,"","",$FFFFFFFF,""
+Field="updated_by","updated_by","INTEGER",,,"","",$FFFFFFFF,""
+Field="created_at","created_at","DATETIME",,,"","",$FFFFFFFF,""
+Field="updated_at","updated_at","DATETIME",,,"","",$FFFFFFFF,""
+EffectMode=None
+Color=$000000
+BkColor=$FFFFFF
+Position="Main",1000,950
+ZOrder=-3
