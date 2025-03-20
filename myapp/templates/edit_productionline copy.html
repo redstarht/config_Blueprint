@@ -113,6 +113,7 @@
             .catch(error => console.error('データ取得エラー', error));
     }
 
+    // testボタンの処理
     document.addEventListener('DOMContentLoaded', () => {
         const testButton = document.getElementById('test');
         if (testButton) {
@@ -153,7 +154,7 @@
             })
         } else {
             factory.departments[0].sections.forEach(section => {
-                const sectionNode = createSectionNode(section, factory.name, factory.departments[0].name);
+                const sectionNode = createSectionNode(section, factory, name, factory.departments[0].name);
                 ul.appendChild(sectionNode);
             })
 
@@ -234,7 +235,7 @@
         // 係を選択した時に対象のitemを表示
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSubsection(div,subsection.id, subsection.name, factoryName, departmentName,sectionName);
+            selectSection(div,subsection.id, subsection.name, factoryName, departmentName,sectionName);
         });
 
         li.appendChild(div);
@@ -263,7 +264,7 @@
     }
 
     // 課を選択したときの処理
-    function selectSubsection(selectedElement,subsectionId, subsectionName,  factoryName, departmentName,sectionName) {
+    function selectSection(selectedElement,subsectionId, subsectionName,  factoryName, departmentName,sectionName) {
 
         // オブジェクト型かどうか精査
         if (typeof factoryName === "object" && factoryName !== null) {
