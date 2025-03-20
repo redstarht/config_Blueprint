@@ -10,9 +10,9 @@ export function toggleTree(ul,div){
     }
     }
 
-    export function createTreeItem(name){
-        const div = document.createElement('div');
-        div.className= 'tree-item';
-        div.innerHTML = `<i class="bi bi-caret-right-fill me-2"></i>${name}`;
-        return div;
+export function createTreeItem(name){
+    const div = document.createElement('div');
+    div.className= 'tree-item';
+    div.innerHTML = `<i class="bi bi-caret-right-fill me-2"></i>${name}`;
+    return div;
     }

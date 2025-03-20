@@ -114,16 +114,6 @@
         }
     }
 
-    // ツリービューを構築
-    function buildTreeView(factories) {
-        const treeView = document.getElementById('treeView');
-        treeView.innerHTML = '';
-
-        factories.forEach(factory => {
-            const factoryNode = createFactoryNode(factory);
-            treeView.appendChild(factoryNode);
-        });
-    }
 
     // 工場ノードを作成
     function createFactoryNode(factory) {
