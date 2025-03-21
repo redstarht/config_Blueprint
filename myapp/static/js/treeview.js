@@ -1,4 +1,4 @@
-import { toggleTree, createTreeItem } from "./utils";
+import { toggleTree, createTreeItem,clearActiveTreeItems } from "./utils";
 
 
 // depth = どこまでの階層を表示させるか
