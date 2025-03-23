@@ -1,10 +1,11 @@
-import { toggleTree, createTreeItem,clearActiveTreeItems } from "./utils";
+import { toggleTree, createTreeItem, clearActiveTreeItems } from "/static/js/utils.js";
+import { selectSection }from "/static/js/edit_subsection.js";
 
 
 // depth = どこまでの階層を表示させるか
 // 1=工場,2=部,3=課,4=係,5=ライン (初期値は4とする) までを表示
 
-export function buildtreeview(factories, depth = 4) {
+export function buildTreeView(factories, depth = 4) {
     const treeView = document.getElementById('treeView');
     treeView.innerHTML = '';
 
@@ -35,8 +36,9 @@ function createFactoryNode(factory, depth) {
     }
     ;
     // クリックしたときに次のツリーを表示する
-    div.addEventLisner('click', (e) => {
-        e.stopProgration();
+    div.addEventListener('click', (e) => {
+        console.log("クリックされた:", div.textContent);
+        e.stopPropagation();
         toggleTree(ul, div);
     });
 
@@ -56,7 +58,7 @@ function createDepartmentNode(department, factoryName, depth) {
     // 次の課ノード作成関数の引数へ渡す処理
     const sortedsections = department.sections
         .filter(section => !section.is_deleted)
-        .sorted((a, b) => a.sort_order - b.sort_order);
+        .sort((a, b) => a.sort_order - b.sort_order);
 
     sortedsections.forEach(section => {
         const sectionNode = createSectionNode(section, factoryName, department.name, depth)
@@ -82,9 +84,9 @@ function createSectionNode(section, factoryName, departmentName, depth) {
 
     //is_deleted === true` の係は除外して
     // 次の係ノード作成関数の引数へ、sort_orderで順番を揃えて渡す
-    const sortedsubsections = section.sortedsubsections
+    const sortedsubsections = section.subsections
         .filter(subsection => !subsection.is_deleted)
-        .sorted((a, b) => a.sort_order - b.sort_order);
+        .sort((a, b) => a.sort_order - b.sort_order);
     if (depth > 3) {
         sortedsubsections.forEach(subsection => {
             const subsectionNode = createSubsectionNode(subsection, factoryName, departmentName, section.name, depth);
@@ -111,19 +113,27 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     div.dataset.subsectionId = subsection.id; // 係のIDを保持
 
     // ライン名 を一覧でツリー表示する時
-    if (depth = 5) {
-        pass;
-    }
 
-
-    if (depth = 4) {
-        // 係を選択した時に対象のitemを表示
+    // 課=3
+    if (depth === 3) {
+        // 課を選択した時に対象のitemを表示
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSection(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+            selectSection( div,section.id, section.name,factoryName, departmentName);
         });
 
     }
+    // 係=4
+    // 係を選択したときに対象のitemを表示
+    else if (depth === 4) {
+        div.addEventListener('click',(e) => {
+            e.stopPropagation();
+            selectSubsection(div,subsection.id,subsection.name,factoryName,departmentName,sectionName);
+        })
+    }
+
+
+
 
 
     li.appendChild(div);
