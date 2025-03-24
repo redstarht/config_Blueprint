@@ -4,7 +4,7 @@ export function toggleTree(ul, div) {
     const icon = div.querySelector('i');
 
     if (ul.style.display === 'none') {
-        ul.style.display == 'block';
+        ul.style.display = 'block';
         icon.className = 'bi bi-caret-down-fill me-2';
     } else {
         ul.style.display = 'none'

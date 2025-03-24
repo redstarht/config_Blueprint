@@ -1,5 +1,5 @@
 import { toggleTree, createTreeItem, clearActiveTreeItems } from "/static/js/utils.js";
-import { selectSection }from "/static/js/edit_subsection.js";
+import { selectSection } from "/static/js/edit_subsection.js";
 
 
 // depth = どこまでの階層を表示させるか
@@ -92,43 +92,45 @@ function createSectionNode(section, factoryName, departmentName, depth) {
             const subsectionNode = createSubsectionNode(subsection, factoryName, departmentName, section.name, depth);
             ul.appendChild(subsectionNode);
         });
+    } else if (depth === 3) {
+        // 課=3
+        // 課を選択した時に対象のitemを表示
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            selectSection(div, section.id, section.name, factoryName, departmentName);
+        });
+        li.appendChild(div);
+        return li
+
     };
 
     div.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleTree(ul, div);
     });
-    li.appendChild(div);
-    li.appendChild(ul);
-    return li
-}
 
-// 係ノードの作成
-function createSubsectionNode(subsection, factoryName, departmentName, sectionName, depth) {
-    const li = document.createElement('li');
-    const div = createTreeItem(subsection.name);
-    const ul = document.createElement('ul');
-    ul.style.display = 'none';
 
-    div.dataset.subsectionId = subsection.id; // 係のIDを保持
+        li.appendChild(div);
+        li.appendChild(ul);
+        return li
+    }
 
-    // ライン名 を一覧でツリー表示する時
+    // 係ノードの作成
+    function createSubsectionNode(subsection, factoryName, departmentName, sectionName, depth) {
+        const li = document.createElement('li');
+        const div = createTreeItem(subsection.name);
+        const ul = document.createElement('ul');
+        ul.style.display = 'none';
 
-    // 課=3
-    if (depth === 3) {
-        // 課を選択した時に対象のitemを表示
+        div.dataset.subsectionId = subsection.id; // 係のIDを保持
+
+        // ライン名 を一覧でツリー表示する時
+        // 係=4
+    // 係を選択したときに対象のitemを表示
+    if (depth === 4) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSection( div,section.id, section.name,factoryName, departmentName);
-        });
-
-    }
-    // 係=4
-    // 係を選択したときに対象のitemを表示
-    else if (depth === 4) {
-        div.addEventListener('click',(e) => {
-            e.stopPropagation();
-            selectSubsection(div,subsection.id,subsection.name,factoryName,departmentName,sectionName);
+            selectSubsection(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
         })
     }
 
@@ -138,5 +140,9 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
 
     li.appendChild(div);
     return li;
-}
+
+
+    }
+
+
 
