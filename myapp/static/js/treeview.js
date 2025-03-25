@@ -1,5 +1,6 @@
 import { toggleTree, createTreeItem, clearActiveTreeItems } from "/static/js/utils.js";
 import { selectSection } from "/static/js/edit_subsection.js";
+import { selectSubsection } from "/static/js/edit_productionline.js";
 
 
 // depth = どこまでの階層を表示させるか
@@ -131,7 +132,9 @@ function createSectionNode(section, factoryName, departmentName, depth) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
             selectSubsection(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
-        })
+        });
+        li.appendChild(div);
+        return li
     }
 
 
