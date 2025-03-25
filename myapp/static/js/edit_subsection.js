@@ -5,6 +5,10 @@ export function selectSection(selectedElement,sectionId, sectionName, factoryNam
     // 課名をヘッダーに反映
     console.log(factoryName.name, departmentName.name, sectionName);
     console.log(factoryName, departmentName, sectionName);
+    
+    let factoryTitle
+    let departmentTitle
+
 
     // オブジェクト型かどうか精査
     if (typeof factoryName === "object" && factoryName !== null) {
