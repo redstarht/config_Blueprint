@@ -181,6 +181,7 @@ class Employee(db.Model):
         'subsections.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     code = db.Column(db.String(50), default='', nullable=False)
+    # 1:一般 2:班長 3:係長(工長) 4:課長 5:部長 
     position_id = db.Column(db.Integer,nullable=False,default=1)
     sort_order = db.Column(db.Integer, default=500, nullable=True)
     is_deleted = db.Column(db.Boolean, default=False, nullable=False)

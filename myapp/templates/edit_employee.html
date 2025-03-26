@@ -8,12 +8,14 @@
     <title>係編集</title>
 </head>
 {% block content %}
+
 <body>
     {% block containar_fluid %}
     <div>
         <button id="test">
             テストボタン
         </button>
+        <div id="spreadsheet"></div>
     </div>
     <div class="containar-fluid">
         <div class="row mt-4">
@@ -36,40 +38,14 @@
                         <div class="ms-5">(※異常内容設定ラインのみ登録)</div>
                     </div>
 
-                    <div class="card-body">
-                        <form action="" id="editform" style="display: none;">
-                            {% for i in range(1,31) %}
-                            <div class="mb-3">
-                                <div class="d-flex gap-2">
-                                    <div>
-                                        <label for="line{{i}}" class="form-label">ライン{{ i }}</label>
-                                        <input type="text" class="form-control" id="line{{i}}" name="line{{i}}">
-                                    </div>
-                                    <div>
-                                        <label for="lineCode{{i}}" class="form-label">ラインコード{{ i }}</label>
-                                        <input type="text" class="form-control" id="lineCode{{i}}" name="lineCode{{i}}">
-                                    </div>
-                                    <div>
-                                        <label for="displayOrder{{i}}" class="form-label">表示順{{ i }}</label>
-                                        <input type="number" class="form-control" id="displayOrder{{i}}" name="displayOrder{{i}}">
-                                    </div>
-                                </div>
 
-                                <small id="lineID{{i}}" class="text-muted"></small>
-                                <small id="createdAt{{i}}" class="text-muted"></small>
-                                <small id="creator{{i}}" class="text-muted"></small>
-                                <small id="updatedAt{{i}}" class="text-muted"></small>
-                                <small id="updater{{i}}" class="text-muted"></small>
-                            </div>
-                            {% endfor %}
-                            <button type='button' id="saveButton" class="btn btn-primary"
-                                style="display: none;">保存</button>
-                        </form>
-                    </div>
+                    <button type='button' id="saveButton" class="btn btn-primary" style="display: none;">保存</button>
+                    </form>
                 </div>
             </div>
-
         </div>
+
+    </div>
     </div>
     {% endblock %}
 </body>
@@ -81,7 +57,7 @@
 
     window.sessionData = null;
 
-    async function loadSessionData(){
+    async function loadSessionData() {
         window.sessionData = await fetchSessionData();
         console.log(`session{id:${window.sessionData.id}
                     session{username:${window.sessionData.username}
@@ -90,8 +66,8 @@
     }
 
     loadSessionData();
-    
-            
+
+
 </script>
 
 <script>
@@ -197,26 +173,26 @@
 
     }
 
-     // 課（section）ノードを作成
-    function createSectionNode(section,factoryName,departmentName){
+    // 課（section）ノードを作成
+    function createSectionNode(section, factoryName, departmentName) {
         const li = document.createElement('li');
         const div = createTreeItem(section.name);
         const ul = document.createElement('ul');
-        ul.style.display='none';
+        ul.style.display = 'none';
 
         const sortedsubsections = section.subsections
-        .filter(subsection => !subsection.is_deleted)
-        .sort((a,b)=> a.sort_order - b.sort_order);
+            .filter(subsection => !subsection.is_deleted)
+            .sort((a, b) => a.sort_order - b.sort_order);
 
         sortedsubsections.forEach(subsection => {
-            const subsectionNode = createSubsectionNode(subsection,factoryName,departmentName,section.name);
+            const subsectionNode = createSubsectionNode(subsection, factoryName, departmentName, section.name);
             ul.appendChild(subsectionNode);
 
         });
 
-        div.addEventListener('click',(e)=>{
+        div.addEventListener('click', (e) => {
             e.stopPropagation();
-            toggleTree(ul,div);
+            toggleTree(ul, div);
         });
         li.appendChild(div);
         li.appendChild(ul);
@@ -225,7 +201,7 @@
     }
 
     // 係（subsection）ノードを作成
-    function createSubsectionNode(subsection, factoryName, departmentName,sectionName) {
+    function createSubsectionNode(subsection, factoryName, departmentName, sectionName) {
         const li = document.createElement('li');
         const div = createTreeItem(subsection.name);
 
@@ -234,7 +210,7 @@
         // 係を選択した時に対象のitemを表示
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSection(div,subsection.id, subsection.name, factoryName, departmentName,sectionName);
+            selectSection(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
         });
 
         li.appendChild(div);
@@ -263,7 +239,7 @@
     }
 
     // 課を選択したときの処理
-    function selectSection(selectedElement,subsectionId, subsectionName,  factoryName, departmentName,sectionName) {
+    function selectSection(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
 
         // オブジェクト型かどうか精査
         if (typeof factoryName === "object" && factoryName !== null) {
@@ -278,7 +254,7 @@
         }
 
 
-        const titleElement = [factoryTitle, departmentTitle, sectionName,subsectionName].filter(Boolean);
+        const titleElement = [factoryTitle, departmentTitle, sectionName, subsectionName].filter(Boolean);
         document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」に所属するラインを編集`;
 
         // 選択状態のリセット
@@ -295,8 +271,6 @@
         console.log(subsectionId);
         document.getElementById('saveButton').dataset.subsectionId = subsectionId;
 
-        // APIから所属ラインのデータを取得
-        fetchProductionLines(subsectionId);
     }
 
     // ツリー内の選択ハイライトをクリア
@@ -307,127 +281,30 @@
         });
     }
 
-    // 係データを取得して表示
-    function fetchProductionLines(subsectionId) {
-        fetch(`/api/subsections/${sectionId}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTPエラー! ステータス: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(subsections => {
-                updateSubsectionForm(subsections);
-            })
-            .catch(error => console.error('subsectionsの取得エラー:', error));
-    }
 
-    // 係の各データを読み込み・フォーム書き出し（データがない場合でも要素が消えないようにする）
-    function updateSubsectionForm(subsections) {
-        for (let i = 1; i <= 5; i++) {
-            const input = document.getElementById(`item${i}`);
-            const subsectionID = document.getElementById(`subsectionID${i}`);
-            const createdAt = document.getElementById(`createdAt${i}`);
-            const creator = document.getElementById(`creator${i}`);
-            const updatedAt = document.getElementById(`updatedAt${i}`);
-            const updater = document.getElementById(`updater${i}`);
+</script>
 
+<script type="module">
+    import { setEmployeesSpreadsheet } from "/static/js/edit_employee.js";
 
-            if (!input || !subsectionID || !createdAt || !updatedAt) {
-                continue;
-            }
+    document.addEventListener('DOMContentLoaded', function () {
+        let spreadSheetId = document.getElementById('spreadsheet');
 
-            if (subsections[i - 1]) {
-                input.value = subsections[i - 1].name;
-                subsectionID.dataset.subsectionID = subsections[i -1].id  || '';
-                subsectionID.textContent=`SubsectionID: ${subsections[i - 1].id || '未定義'} `;
-                createdAt.textContent = `/ 作成: ${subsections[i - 1].created_at || '不明'}`;
-                creator.textContent = `/ 作成者: ${subsections[i - 1].created_by_username || 'ユーザー不明'}`;
-                updatedAt.textContent = `/ 更新: ${subsections[i - 1].updated_at || '未更新'}`;
-                updater.textContent = `/ 更新者:${subsections[i -1 ].updated_by_username || 'ユーザー不明'}`;
-            } else {
-                input.value = '';
-                subsectionID.dataset.subsectionID = '';
-                subsectionID.textContent=`SubsectionID: -`;
-                createdAt.textContent = '/ 作成: -';
-                creator.textContent = '/ 作成者: -';
-                updatedAt.textContent = '/ 更新: -';
-                updater.textContent = '/ 更新者: -';
-            }
+        spreadSheetId = document.getElementById('spreadsheet');
+        async function loadEmployeesData(spreadSheetId) {
+            // const response = await fetch('/api/employees');
+            // const employees = await response.json();
+            // console.log(employees);
+            await setEmployeesSpreadsheet(spreadSheetId);
         }
-    }
-
-    // 保存ボタン処理
-    document.getElementById('saveButton').addEventListener('click', () => {
-        const sectionId = document.getElementById('saveButton').dataset.sectionId;
-
-        if (!sectionId) {
-            console.error("エラー: sectionIdが取得できませんでした");
-            alert("エラー: sectionIdが未設定です");
-            return;
-        }
-
-        const subsections = [];
-        for (let i = 1; i <= 5; i++) {
-            const input = document.getElementById(`item${i}`);
-            const subsectionID = document.getElementById(`subsectionID${i}`);
-
-            if(!input || !subsectionID) continue;
-
-            let name = input.value.trim();
-            const id = subsectionID.dataset.subsectionID;
-            let created_by = window.sessionData.id;
-            let updated_by = window.sessionData.id;
-            
-            if(subsectionID.dataset.subsectionID){
-                if(!input.value){
-                name='';
-                }
-            }
-
-            // 既存データをID保持したまま送信(nameが空でも送る)
-            if (id) {
-                subsections.push({ id,name,updated_by});
-            // 新規データはnameがある場合のみ送る
-            }else if (name){
-                subsections.push({name,created_by});
-            }
-        }
-
-        saveSubsections(sectionId, subsections);
+        loadEmployeesData(spreadSheetId);
     });
 
-    // 係データを保存
-    function saveSubsections(sectionId, subsections) {
-        fetch(`/api/subsections/${sectionId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(subsections)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTPエラー status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('保存成功:', data);
-                alert('保存しました');
-                fetchSubsections(sectionId); // 保存後にデータを再取得
-            })
-            .catch(error => {
-                console.error('保存エラー', error);
-                alert('データの取得に失敗しました');
-            });
-    }
+
+
 
 </script>
 {% endblock scripts %}
 {% endblock %}
+
 </html>
-
-
-
-
-
-
