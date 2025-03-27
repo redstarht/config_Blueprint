@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
 {% extends "base.html" %}
 
 <head>
@@ -16,7 +16,7 @@
         <button id="test">
             テストボタン
         </button>
-        <div id="spreadsheet"></div>
+        
     </div>
     <div class="containar-fluid">
         <div class="row mt-4">
@@ -35,10 +35,9 @@
             <div class="col-12 col-md-7 col-lg-9 ">
                 <div class="card">
                     <div class="card-header card-header-title" id="cardtitle">
-                        <div id="cardtitle-main">選択した係に所属するラインを編集</div>
-                        <div class="ms-5">(※異常内容設定ラインのみ登録)</div>
+                        <div id="cardtitle-main">選択した係に所属する人員を編集</div>
                     </div>
-
+                    <div id="spreadsheet"></div>
 
                     <button type='button' id="saveButton" class="btn btn-primary" style="display: none;">保存</button>
                     </form>

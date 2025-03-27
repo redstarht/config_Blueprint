@@ -4,7 +4,7 @@ import { selectSubsection } from "/static/js/edit_productionline.js";
 
 
 // depth = どこまでの階層を表示させるか
-// 1=工場,2=部,3=課,4=係,5=ライン (初期値は4とする) までを表示
+// 1=工場,2=部,3=課,4=係(ライン編集) 5:(人員編集) (初期値は4とする) までを表示
 
 export function buildTreeView(factories, depth = 4) {
     const treeView = document.getElementById('treeView');
