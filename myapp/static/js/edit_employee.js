@@ -8,13 +8,28 @@ export function setEmployeesSpreadsheet(spreadSheetId) {
         ],
         columns: [
             { type: 'hidden'}, //管理ID 非表示
-            { type: 'numeric', title: 'Numeric', mask: '$ #.##,00', decimal: ',' },
-            { type: 'calendar', title: 'Calendar' },
-            { type: 'dropdown', source: ['Yes', 'No', 'Maybe'] },
-            { type: 'checkbox', title: 'Checkbox' },
-            { type: 'color', title: 'Color', width: 50, render: 'square' }
+            { type: 'hidden'}, //所属係ID 非表示
+            { type: 'text'},//名前
+            { type: 'text'},//コード
+            { type: 'dropdown', source: ['担当', '班長', '組長','課長','部長'] },//職位
+            { type: 'hidden',},//sort_order 非表示
+            { type: 'hidden',},//is_deleted 非表示
+            { type: 'hidden',},//created_by 非表示
+            { type: 'hidden',},//updated_by 非表示
+            { type: 'hidden',},//created_at 非表示
+            { type: 'hidden',},//updated_at 非表示
         ]
     })
 };
 
-{type : hidden}
+// id hidden
+// subsection_id hidden
+// name text
+// code text
+// position_id dropdown
+// sort_order hidden
+// is_deleted hidden
+// created_by hidden
+// updated_by hidden
+// created_at hidden
+// updated_at hidden
