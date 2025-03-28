@@ -62,12 +62,7 @@ main_bp = Blueprint('main', __name__)
 
 #         # 新しいデータを追加（idが返り値でなかったら新規登録する)
 #         for item in data:
-#             if 'id' not in item:
-#                 new_sub=Subsection(
-#                     section_id=section_id,
-#                     name=item.get('name'),
-#                     created_by=item.get('created_by'),
-#                     updated_by=item.get('updated_by')
+#             if 'id' not in _by=item.get('updated_by')
 #                 )
 #                 db.session.add(new_sub)
 
@@ -76,6 +71,11 @@ main_bp = Blueprint('main', __name__)
 #             f"更新後のsubsections:{[sub.to_dict() for sub in Subsection.query.filter_by(section_id=section_id).all()]}")
 #         return jsonify({"message": "subsections updated successfully"})
 
+#                 new_sub=Subsection(
+#                     section_id=section_id,
+#                     name=item.get('name'),
+#                     created_by=item.get('created_by'),
+#                     updated
 
 @main_bp.route('/')
 def index():

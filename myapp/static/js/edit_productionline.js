@@ -1,7 +1,7 @@
 import { clearActiveTreeItems } from "/static/js/utils.js";
 
 // 係を選択したときの処理(残す)
-export function selectSubsection(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
+export function handleLines(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
 
     let factoryTitle
     let departmentTitle

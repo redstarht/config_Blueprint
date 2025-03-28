@@ -16,7 +16,7 @@
         <button id="test">
             テストボタン
         </button>
-        
+
     </div>
     <div class="containar-fluid">
         <div class="row mt-4">
@@ -37,7 +37,7 @@
                     <div class="card-header card-header-title" id="cardtitle">
                         <div id="cardtitle-main">選択した係に所属する人員を編集</div>
                     </div>
-                    <div id="spreadsheet"></div>
+                    <div id="spreadsheet" style="display: none;"></div>
 
                     <button type='button' id="saveButton" class="btn btn-primary" style="display: none;">保存</button>
                     </form>
@@ -70,234 +70,46 @@
 
 </script>
 
-<script>
-    let test = null;
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log(document.getElementById('saveButton')); // null なら要素が存在していない
-        fetchTreeData();
-    });
-
-    // ツリー構造のデータを取得
-    function fetchTreeData() {
-        fetch('/api/tree')
-            .then(response => response.json())
-            .then(data => {
-                console.log('取得したデータ:', JSON.stringify(data, null, 2));
-                test = data;
-                buildTreeView(data);
-            })
-            .catch(error => console.error('データ取得エラー', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const testButton = document.getElementById('test');
-        if (testButton) {
-            testButton.addEventListener('click', test_log);
-        }
-    })
-
-    function test_log() {
-        if (test != null) {
-            console.log('取得データ:', test);
-        } else {
-            console.log("未定義です");
-        }
-    }
-
-    // ツリービューを構築
-    function buildTreeView(factories) {
-        const treeView = document.getElementById('treeView');
-        treeView.innerHTML = '';
-
-        factories.forEach(factory => {
-            const factoryNode = createFactoryNode(factory);
-            treeView.appendChild(factoryNode);
-        });
-    }
-
-    // 工場ノードを作成
-    function createFactoryNode(factory) {
-        const li = document.createElement('li');
-        const div = createTreeItem(factory.name);
-        const ul = document.createElement('ul');
-        ul.style.display = 'none';
-
-        if (factory.departments.length > 1) {
-            factory.departments.forEach(department => {
-                const departmentNode = createDepartmentNode(department, factory.name);
-                ul.appendChild(departmentNode);
-            })
-        } else {
-            factory.departments[0].sections.forEach(section => {
-                const sectionNode = createSectionNode(section, factory, name, factory.departments[0].name);
-                ul.appendChild(sectionNode);
-            })
-
-
-        };
-
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleTree(ul, div);
-        });
-
-        li.appendChild(div);
-        li.appendChild(ul);
-        return li;
-    }
-
-    // 部署ノードを作成
-    function createDepartmentNode(department, factoryName) {
-        const li = document.createElement('li');
-        const div = createTreeItem(department.name);
-        const ul = document.createElement('ul');
-        ul.style.display = 'none';
-
-        const sortedsections = department.sections
-            .filter(section => !section.is_deleted) //is_deleted === true` のものは除外
-            .sort((a, b) => a.sort_order - b.sort_order);
-
-        sortedsections.forEach(section => {
-            const sectionNode = createSectionNode(section, factoryName, department.name);
-            ul.appendChild(sectionNode);
-        });
-
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleTree(ul, div);
-        });
-
-        li.appendChild(div);
-        li.appendChild(ul);
-        return li;
-
-    }
-
-    // 課（section）ノードを作成
-    function createSectionNode(section, factoryName, departmentName) {
-        const li = document.createElement('li');
-        const div = createTreeItem(section.name);
-        const ul = document.createElement('ul');
-        ul.style.display = 'none';
-
-        const sortedsubsections = section.subsections
-            .filter(subsection => !subsection.is_deleted)
-            .sort((a, b) => a.sort_order - b.sort_order);
-
-        sortedsubsections.forEach(subsection => {
-            const subsectionNode = createSubsectionNode(subsection, factoryName, departmentName, section.name);
-            ul.appendChild(subsectionNode);
-
-        });
-
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleTree(ul, div);
-        });
-        li.appendChild(div);
-        li.appendChild(ul);
-        return li
-
-    }
-
-    // 係（subsection）ノードを作成
-    function createSubsectionNode(subsection, factoryName, departmentName, sectionName) {
-        const li = document.createElement('li');
-        const div = createTreeItem(subsection.name);
-
-        div.dataset.subsectionId = subsection.id; // 係のIDを保持
-
-        // 係を選択した時に対象のitemを表示
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            selectSection(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
-        });
-
-        li.appendChild(div);
-        return li;
-    }
-
-    // ツリーアイテム（クリック可能な要素）を作成
-    function createTreeItem(name) {
-        const div = document.createElement('div');
-        div.className = 'tree-item';
-        div.innerHTML = `<i class="bi bi-caret-right-fill me-2"></i>${name}`;
-        return div;
-    }
-
-    // ツリーの開閉をトグル
-    function toggleTree(ul, div) {
-        const icon = div.querySelector('i');
-
-        if (ul.style.display === 'none') {
-            ul.style.display = 'block';
-            icon.className = 'bi bi-caret-down-fill me-2';
-        } else {
-            ul.style.display = 'none';
-            icon.className = 'bi bi-caret-right-fill me-2';
-        }
-    }
-
-    // 課を選択したときの処理
-    function selectSection(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
-
-        // オブジェクト型かどうか精査
-        if (typeof factoryName === "object" && factoryName !== null) {
-            factoryTitle = factoryName.name;
-        } else {
-            factoryTitle = factoryName;
-        };
-        if (typeof departmentName === "object" && departmentName !== null) {
-            departmentTitle = departmentName.name;
-        } else {
-            departmentTitle = departmentName;
-        }
-
-
-        const titleElement = [factoryTitle, departmentTitle, sectionName, subsectionName].filter(Boolean);
-        document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」に所属するラインを編集`;
-
-        // 選択状態のリセット
-        clearActiveTreeItems();
-
-        // 新しく選択した課にハイライトを適用
-        selectedElement.classList.add('active');
-
-        // フォームと保存ボタンを表示
-        document.getElementById('editform').style.display = 'block';
-        document.getElementById('saveButton').style.display = 'block';
-
-        // 保存ボタンに section_id をセット
-        console.log(subsectionId);
-        document.getElementById('saveButton').dataset.subsectionId = subsectionId;
-
-    }
-
-    // ツリー内の選択ハイライトをクリア
-    function clearActiveTreeItems() {
-        const activeItems = document.querySelectorAll('.tree-item.active');
-        activeItems.forEach(item => {
-            item.classList.remove('active');
-        });
-    }
-
-
-</script>
-
+<!-- ツリービュー構築＆選択した係の人員データを表示＆編集時の保存 -->
+<!-- JspreadSheet機能 -->
 <script type="module">
+
+
+
+    import { fetchTreeData } from "/static/js/api.js";
+    import { buildTreeView } from "/static/js/treeview.js";
+    // import { setupSaveButton } from "/static/js/edit_employee.js";
     import { setEmployeesSpreadsheet } from "/static/js/edit_employee.js";
+
 
     document.addEventListener('DOMContentLoaded', function () {
         let spreadSheetId = document.getElementById('spreadsheet');
 
+        const depth = 5;
+        async function loadTreeview() {
+            const factories = await fetchTreeData();
+            if (factories) {
+                buildTreeView(factories, depth);
+            } else {
+                console.error("ツリー構造データ取得に失敗しました");
+            }
+
+            loadEmployeesData(spreadSheetId, fetchdata);
+        }
+
+        loadTreeview();
+
+
+
         spreadSheetId = document.getElementById('spreadsheet');
-        async function loadEmployeesData(spreadSheetId) {
+        async function loadEmployeesData(spreadSheetId, fetchdata) {
             // const response = await fetch('/api/employees');
             // const employees = await response.json();
             // console.log(employees);
-            await setEmployeesSpreadsheet(spreadSheetId);
+            await setEmployeesSpreadsheet(spreadSheetId, fetchdata);
         }
-        loadEmployeesData(spreadSheetId);
+
+        // setupSaveButton();
     });
 
 

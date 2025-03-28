@@ -10,13 +10,13 @@ def manage_productionline(subsection_id):
     from ..model import Employee
     if request.method == 'GET':
         print(f"subsection_id={subsection_id}")
-        # 指定されたsubsection_idに紐づいた子係(employees)を取得
+        # 指定されたsubsection_idに紐づいた要素(employees)を取得
         employees = Employee.query.filter_by(subsection_id=subsection_id).all()
 
         if not employees:
             print("データが見つかりませんでした[]を返します")
             return jsonify([])
-        # 指定されたsubsectionIDのprodlineのみを格納
+        # 指定されたsubsectionIDのemployeesのみを格納
         response = jsonify([employee.to_dict() for employee in employees])
         print(f"レスポンスデータ:{response.get_json}")
         return response
@@ -38,7 +38,7 @@ def manage_productionline(subsection_id):
         # 既存データを更新 or 削除
 
         for employee in exsiting_employees:
-            # data を for文で回して、それぞれのidが既存データにあるかどうかを確認
+            # data を for文で回してitemに格納、それぞれのidが既存データにあるかどうかを確認
             # あれば、そのデータを更新し、なければ削除する
             match_data = next((item for item in data if str(
                 item.get('id')) == str(employee.id)), None)

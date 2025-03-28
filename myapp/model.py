@@ -183,6 +183,7 @@ class Employee(db.Model):
     code = db.Column(db.String(50), default='', nullable=False)
     # 1:一般 2:班長 3:係長(工長) 4:課長 5:部長 
     position_id = db.Column(db.Integer,nullable=False,default=1)
+    category = db.Column(db.Integer,nullable=False,default=1)
     sort_order = db.Column(db.Integer, default=500, nullable=True)
     is_deleted = db.Column(db.Boolean, default=False, nullable=False)
     created_by = db.Column(db.Integer,db.ForeignKey('accounts.id'), nullable=True)
@@ -203,7 +204,8 @@ class Employee(db.Model):
             'name': self.name,
             'subsection_id': self.subsection_id,
             'code': self.code,
-            'position':self.position,
+            'position':self.position_id,
+            'category':self.category,
             'sort_order': self.sort_order,
             'is_deleted': self.is_deleted,
             'created_by': self.created_by,
