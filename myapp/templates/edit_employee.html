@@ -94,20 +94,20 @@
                 console.error("ツリー構造データ取得に失敗しました");
             }
 
-            loadEmployeesData(spreadSheetId, fetchdata);
+            // loadEmployeesData(spreadSheetId, fetchdata);
         }
 
         loadTreeview();
 
 
 
-        spreadSheetId = document.getElementById('spreadsheet');
-        async function loadEmployeesData(spreadSheetId, fetchdata) {
-            // const response = await fetch('/api/employees');
-            // const employees = await response.json();
-            // console.log(employees);
-            await setEmployeesSpreadsheet(spreadSheetId, fetchdata);
-        }
+        // spreadSheetId = document.getElementById('spreadsheet');
+        // async function loadEmployeesData(spreadSheetId, fetchdata) {
+        //     // const response = await fetch('/api/employees');
+        //     // const employees = await response.json();
+        //     // console.log(employees);
+        //     await setEmployeesSpreadsheet(spreadSheetId, fetchdata);
+        // }
 
         // setupSaveButton();
     });

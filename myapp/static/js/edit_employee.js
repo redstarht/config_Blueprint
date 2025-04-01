@@ -38,7 +38,7 @@ export function handleEmployees(selectedElement, subsectionId, subsectionName, f
 
     // APIから所属係の人員データを取得
     fetchEmployees(subsectionId);
-}
+}   
 
 
 
@@ -53,13 +53,15 @@ function fetchEmployees(subsectionId) {
         })
         .then(employees => {
             console.log(employees)
-            formattedEmployees  = formatData(employees);
-            return formattedEmployees
+            let formattedEmployees  = formatData(employees);
+            let spreadSheetId = document.getElementById('spreadsheet');
+            setEmployeesSpreadsheet(spreadSheetId, formattedEmployees);
         })
         .catch(error => console.error('取得エラー:', error));
 }
 
 // 係の各データを読み込み・フォーム書き出し（データがない場合でも要素が消えないようにする）
+//  return fetchdata
 function formatData(employees) {
     console.log(employees)
     let formattedEmployees = employees.map(employee =>[
