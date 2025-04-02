@@ -1,4 +1,5 @@
 import { clearActiveTreeItems } from "/static/js/utils.js";
+// import { japaneseCustomEditor } from "/static/js/japanese_customeditor.js";
 
 // 係を選択したときの処理(残す)
 export function handleEmployees(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
@@ -154,22 +155,27 @@ function saveproductionLines(subsectionId, productionLines) {
 
 export function setEmployeesSpreadsheet(spreadSheetId,fetchdata) {
     jspreadsheet(spreadSheetId, {
+        worksheets:[{
         data: fetchdata,
         minDimensions: [3, 30],
         allowInsertColumn: false,
         columns: [
             { type: 'hidden',sort: false}, //管理ID 非表示
             { type: 'hidden',sort: false}, //所属係ID 非表示
-            { type: 'text',title:'氏名',width:170,sort: false},//名前
+            { type: japaneseCustomEditor.editor,title:'氏名',width:170,sort: false},//名前
             { type: 'numeric',title:'社員番号',width:90,sort: false},//コード(社員番号)
             { type: 'dropdown', title:'役職',width:170,source: ['一般(オペレータ)', '班長', '係長(工長)','課長','部長'],sort: false },//職位
             { type: 'hidden',sort: false},//sort_order 非表示
             { type: 'hidden',sort: false},//is_deleted 非表示
+            { type: 'hidden',sort: false},//category 非表示
             { type: 'hidden',sort: false},//created_by 非表示
             { type: 'hidden',sort: false},//updated_by 非表示
             { type: 'hidden',sort: false},//created_at 非表示
             { type: 'hidden',sort: false},//updated_at 非表示
-        ]
+        ]}],
+        plugins: {
+            jcePlugin: japaneseCustomEditor.plugin,
+        }
     })
 };
 

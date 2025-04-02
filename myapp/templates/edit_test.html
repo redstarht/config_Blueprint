@@ -37,7 +37,7 @@
                     <div class="card-header card-header-title" id="cardtitle">
                         <div id="cardtitle-main">選択した係に所属する人員を編集</div>
                     </div>
-                    <div id="spreadsheet" style="display: none;"></div>
+                    <div id="theGrid" style="display: none;"></div>
 
                     <button type='button' id="saveButton" class="btn btn-primary" style="display: none;">保存</button>
                     </form>
@@ -85,7 +85,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         let spreadSheetId = document.getElementById('spreadsheet');
 
-        const depth = 5;
+        const depth = 100;
         async function loadTreeview() {
             const factories = await fetchTreeData();
             if (factories) {
@@ -111,12 +111,35 @@
 
         // setupSaveButton();
     });
+    document.readyState === 'complete' ? init() : window.onload = init;
+    function init() {
+        var grid = new wjGrid.FlexGrid('#FlexGrid');
+        grid.itemsSource = createData(5);
+        grid.imeEnabled = true;
+
+    }
+
+    function createData(count) {
+        var countries = 'US,Germany,UK,Japan,Italy,Greece'.split(','),
+            data = [];
+
+        for (var i = 0; i < count; i++) {
+            data.push({
+                id: i + 1,
+                country: countries[i % countries.length],
+                date: new Date(2014, i % 12, i % 28),
+                amount: Math.random() * 10000,
+                active: i % 4 == 0,
+            });
+        }
+
+        return data;
+    }
 
 
 
 
 </script>
-<script src="/static/js/japanese_customeditor.js"></script>
 {% endblock scripts %}
 {% endblock %}
 

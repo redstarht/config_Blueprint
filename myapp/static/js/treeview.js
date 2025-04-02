@@ -7,6 +7,17 @@ import {handleEmployees } from "/static/js/edit_employee.js";
 // depth = どこまでの階層を表示させるか
 // 1=工場,2=部,3=課,4=係(ライン編集) 5:(人員編集) (初期値は4とする) までを表示
 
+const pageType = Object.freeze({
+    factory: 1,
+    department: 2,
+    section: 3,
+    subsection: 4,
+    employee: 5,
+    test:100
+  });
+
+
+
 export function buildTreeView(factories, depth = 4) {
     const treeView = document.getElementById('treeView');
     treeView.innerHTML = '';

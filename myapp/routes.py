@@ -124,6 +124,10 @@ def edit_employee():
 def edit_productionline():
     return render_template('edit_productionline.html')
 
+@main_bp.route('/edit_test')
+def edit_test():
+    return render_template('edit_test.html')
+
 
 @main_bp.route('/departments/<int:factory_id>')
 def departments(factory_id):
