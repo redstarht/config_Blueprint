@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 {% block head %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,18 +13,26 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/style.css" />
-    <!-- Jspreadsheet -->
-    <script src="https://bossanova.uk/jspreadsheet/v4/jspreadsheet.js"></script>
-    <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jspreadsheet.css" type="text/css" />
+    <!-- WIJMO -->
+    <link href="cdn.mescius.com/wijmo/5.20241.9/styles/wijmo.min.css" rel="stylesheet" />
+    <script src="cdn.mescius.com/wijmo/5.20241.9/controls/wijmo.min.js"></script>
+    <script src="cdn.mescius.com/wijmo/5.20241.9/controls/wijmo.grid.min.js"></script>
+    <script src="cdn.mescius.com/wijmo/5.20241.9/controls/cultures/wijmo.culture.ja.min.js"></script>
+
+    <!-- Jspreadsheetv5 -->
+    <script src="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.js"></script>
     <script src="https://jsuites.net/v5/jsuites.js"></script>
+    <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v5/jspreadsheet.css" type="text/css" />
     <link rel="stylesheet" href="https://jsuites.net/v5/jsuites.css" type="text/css" />
+    <script src="/static/js/japanese_customeditor.js"></script>
+
     <!-- GoogleFonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
-    
-    
-{% endblock %}
+
+
+    {% endblock %}
 
 </head>
 
@@ -61,9 +70,9 @@
                         <a class="nav-link" href="#">異常内容編集</a>
                         <a class="nav-link" href="#">管理者画面</a>
                         {% if 'username' in session %}
-                            <a class="btn btn-primary" href="{{ url_for('auth.logout') }}">ログアウト</a>
+                        <a class="btn btn-primary" href="{{ url_for('auth.logout') }}">ログアウト</a>
                         {% else %}
-                            <a class="btn btn-primary" href="{{ url_for('auth.login') }}">ログイン</a>
+                        <a class="btn btn-primary" href="{{ url_for('auth.login') }}">ログイン</a>
                         {% endif %}
                     </div>
                 </div>
@@ -75,4 +84,5 @@
     {% block content %}
     {% endblock %}
 </body>
+
 </html>

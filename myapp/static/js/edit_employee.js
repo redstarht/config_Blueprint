@@ -1,7 +1,8 @@
 import { clearActiveTreeItems } from "/static/js/utils.js";
+// import { japaneseCustomEditor } from "/static/js/japanese_customeditor.js";
 
 // 係を選択したときの処理(残す)
-export function selectSubsection(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
+export function handleEmployees(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
 
     let factoryTitle
     let departmentTitle
@@ -20,7 +21,7 @@ export function selectSubsection(selectedElement, subsectionId, subsectionName, 
 
 
     const titleElement = [factoryTitle, departmentTitle, sectionName, subsectionName].filter(Boolean);
-    document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」`;
+    document.getElementById('cardtitle-main').textContent = `「${titleElement.join('/')}」に所属する人員を編集`;
 
     // 選択状態のリセット
     clearActiveTreeItems();
@@ -29,8 +30,8 @@ export function selectSubsection(selectedElement, subsectionId, subsectionName, 
     selectedElement.classList.add('active');
 
     // フォームと保存ボタンを表示
-    document.getElementById('editform').style.display = 'block';
     document.getElementById('saveButton').style.display = 'block';
+    document.getElementById('spreadsheet').style.display = 'block';
 
     // 保存ボタンに subsection_id をセット
     console.log(subsectionId);
@@ -38,11 +39,11 @@ export function selectSubsection(selectedElement, subsectionId, subsectionName, 
 
     // APIから所属係の人員データを取得
     fetchEmployees(subsectionId);
-}
+}   
 
 
 
-// 係データを取得して表示
+// 人員データを取得して表示
 function fetchEmployees(subsectionId) {
     fetch(`/api/employees/${subsectionId}`)
         .then(response => {
@@ -53,44 +54,34 @@ function fetchEmployees(subsectionId) {
         })
         .then(employees => {
             console.log(employees)
-            updateSubsectionForm(employees);
+            let formattedEmployees  = formatData(employees);
+            let spreadSheetId = document.getElementById('spreadsheet');
+            setEmployeesSpreadsheet(spreadSheetId, formattedEmployees);
         })
-        .catch(error => console.error('subsectionsの取得エラー:', error));
+        .catch(error => console.error('取得エラー:', error));
 }
 
 // 係の各データを読み込み・フォーム書き出し（データがない場合でも要素が消えないようにする）
-function updateSubsectionForm(productionLines) {
-    for (let i = 1; i <= 5; i++) {
-        const input = document.getElementById(`lineName${i}`);
-        const lineID = document.getElementById(`lineID${i}`);
-        const createdAt = document.getElementById(`createdAt${i}`);
-        const creator = document.getElementById(`creator${i}`);
-        const updatedAt = document.getElementById(`updatedAt${i}`);
-        const updater = document.getElementById(`updater${i}`);
+//  return fetchdata
+function formatData(employees) {
+    console.log(employees)
+    let formattedEmployees = employees.map(employee =>[
+        employee.id,
+        employee.subsection_id,
+        employee.name,
+        employee.code,
+        employee.position_id,
+        employee.category,
+        employee.sort_order,
+        employee.is_deleted,
+        employee.created_by,
+        employee.updated_by,
+        employee.created_at,
+        employee.updated_at
+    ]);
 
-        // 要素が未定義であればスキップ
-        if (!input || !lineID || !createdAt || !updatedAt) {
-            continue;
-        }
-
-        if (productionLines[i - 1]) {
-            input.value = productionLines[i - 1].name;
-            lineID.dataset.lineID = productionLines[i - 1].id || '';
-            lineID.textContent = `lineID: ${productionLines[i - 1].id || '未定義'} `;
-            createdAt.textContent = `/ 作成: ${productionLines[i - 1].created_at || '不明'}`;
-            creator.textContent = `/ 作成者: ${productionLines[i - 1].created_by_username || 'ユーザー不明'}`;
-            updatedAt.textContent = `/ 更新: ${productionLines[i - 1].updated_at || '未更新'}`;
-            updater.textContent = `/ 更新者:${productionLines[i - 1].updated_by_username || 'ユーザー不明'}`;
-        } else {
-            input.value = '';
-            lineID.dataset.lineID = '';
-            lineID.textContent = `lineID: -`;
-            createdAt.textContent = '/ 作成: -';
-            creator.textContent = '/ 作成者: -';
-            updatedAt.textContent = '/ 更新: -';
-            updater.textContent = '/ 更新者: -';
-        }
-    }
+    return formattedEmployees;
+    
 }
 
 // 保存ボタン処理
@@ -162,27 +153,29 @@ function saveproductionLines(subsectionId, productionLines) {
 
 
 
-export function setEmployeesSpreadsheet(spreadSheetId) {
+export function setEmployeesSpreadsheet(spreadSheetId,fetchdata) {
     jspreadsheet(spreadSheetId, {
-        data: [
-            ['Hello', 13123, '', 'Yes', true, '#AA4411'],
-            ['World!', 8, '', 'No', false, '#99BE23']
-        ],
+        worksheets:[{
+        data: fetchdata,
         minDimensions: [3, 30],
         allowInsertColumn: false,
         columns: [
             { type: 'hidden',sort: false}, //管理ID 非表示
             { type: 'hidden',sort: false}, //所属係ID 非表示
-            { type: 'text',title:'氏名',width:170,sort: false},//名前
+            { type: japaneseCustomEditor.editor,title:'氏名',width:170,sort: false},//名前
             { type: 'numeric',title:'社員番号',width:90,sort: false},//コード(社員番号)
             { type: 'dropdown', title:'役職',width:170,source: ['一般(オペレータ)', '班長', '係長(工長)','課長','部長'],sort: false },//職位
             { type: 'hidden',sort: false},//sort_order 非表示
             { type: 'hidden',sort: false},//is_deleted 非表示
+            { type: 'hidden',sort: false},//category 非表示
             { type: 'hidden',sort: false},//created_by 非表示
             { type: 'hidden',sort: false},//updated_by 非表示
             { type: 'hidden',sort: false},//created_at 非表示
             { type: 'hidden',sort: false},//updated_at 非表示
-        ]
+        ]}],
+        plugins: {
+            jcePlugin: japaneseCustomEditor.plugin,
+        }
     })
 };
 

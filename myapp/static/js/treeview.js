@@ -1,6 +1,7 @@
 import { toggleTree, createTreeItem, clearActiveTreeItems } from "/static/js/utils.js";
 import { selectSection } from "/static/js/edit_subsection.js";
-import { selectSubsection } from "/static/js/edit_productionline.js";
+import { handleLines } from "/static/js/edit_productionline.js";
+import {handleEmployees } from "/static/js/edit_employee.js";
 
 
 // depth = どこまでの階層を表示させるか
@@ -121,30 +122,40 @@ function createSectionNode(section, factoryName, departmentName, depth) {
     });
 
 
-        li.appendChild(div);
-        li.appendChild(ul);
-        return li
-    }
+    li.appendChild(div);
+    li.appendChild(ul);
+    return li
+}
 
-    // 係ノードの作成
-    function createSubsectionNode(subsection, factoryName, departmentName, sectionName, depth) {
-        const li = document.createElement('li');
-        const div = createTreeItem(subsection.name);
-        const ul = document.createElement('ul');
-        ul.style.display = 'none';
+// 係ノードの作成
+function createSubsectionNode(subsection, factoryName, departmentName, sectionName, depth) {
+    const li = document.createElement('li');
+    const div = createTreeItem(subsection.name);
+    const ul = document.createElement('ul');
+    ul.style.display = 'none';
 
-        div.dataset.subsectionId = subsection.id; // 係のIDを保持
+    div.dataset.subsectionId = subsection.id; // 係のIDを保持
 
-        // ライン名 を一覧でツリー表示する時
-        // 係=4
-    // 係を選択したときに対象のitemを表示
+    // ライン名 を一覧でツリー表示する時
+
+    // 係を選択したときに対象のラインを表示
+// ライン編集の時
     if (depth === 4) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSubsection(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+            handleLines(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
         });
         li.appendChild(div);
-        return li
+        return li;
+    }
+    // 人員編集の時
+    else if (depth === 5) {
+        div.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+        });
+        li.appendChild(div);
+        return li;
     } else if (depth === 5) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -154,15 +165,12 @@ function createSectionNode(section, factoryName, departmentName, depth) {
         return li;
     }
 
-
-
-
-
     li.appendChild(div);
     return li;
+}
 
 
-    }
+
 
 
 
