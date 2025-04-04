@@ -1,20 +1,16 @@
 import { toggleTree, createTreeItem, clearActiveTreeItems } from "/static/js/utils.js";
 import { selectSection } from "/static/js/edit_subsection.js";
 import { handleLines } from "/static/js/edit_productionline.js";
-import {handleEmployees } from "/static/js/edit_employee.js";
+import { handleEmployees } from "/static/js/edit_employee.js";
 
 
 // depth = どこまでの階層を表示させるか
 // 1=工場,2=部,3=課,4=係(ライン編集) 5:(人員編集) (初期値は4とする) までを表示
 const depthHandlers = {
-3:(div, sectionId, sectionName, factoryName, departmentName) => {
-    selectSection(div, sectionId, sectionName, factoryName, departmentName)},
-4:(div, subsectionId, subsectionName, factoryName, departmentName, sectionName) => {
-    selectSubsection(div, subsectionId, subsectionName, factoryName, departmentName, sectionName)},
-5:(div, subsectionId, subsectionName, factoryName, departmentName, sectionName) => {
-    handleEmployees(div, subsectionId, subsectionName, factoryName, departmentName, sectionName)},
+    3: (div, section) => selectSection(div, section.id, section.name, section.factoryName, section.departmentName),
+    4: (div, subsection) => handleLines(div, subsection.id, subsection.name, subsection.factoryName, subsection.departmentName, subsection.sectionName),
+    5: (div, subsection) => handleEmployees(div, subsection.id, subsection.name, subsection.factoryName, subsection.departmentName, subsection.sectionName)
 };
-
 
 
 export function buildTreeView(factories, depth = 4) {
@@ -139,8 +135,11 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     // ライン名 を一覧でツリー表示する時
 
     // 係を選択したときに対象のラインを表示
-// ライン編集の時
-    if (depth === 4) {
+    // ライン編集の時
+
+
+
+    if (depthHandlers[depth]) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
             handleLines(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
@@ -168,7 +167,7 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     li.appendChild(div);
     return li;
 }
-
+depthHandlers[depth(div, subsection.id, subsection.name, factoryName, departmentName, sectionName)];
 
 
 
