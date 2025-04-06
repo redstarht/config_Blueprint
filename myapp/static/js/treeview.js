@@ -167,7 +167,6 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     li.appendChild(div);
     return li;
 }
-depthHandlers[depth(div, subsection.id, subsection.name, factoryName, departmentName, sectionName)];
 
 
 

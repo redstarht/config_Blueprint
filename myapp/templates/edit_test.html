@@ -16,6 +16,7 @@
         <button id="test">
             テストボタン
         </button>
+        <div id="theGrid"></div>
 
     </div>
     <div class="containar-fluid">
@@ -37,7 +38,7 @@
                     <div class="card-header card-header-title" id="cardtitle">
                         <div id="cardtitle-main">選択した係に所属する人員を編集</div>
                     </div>
-                    <div id="theGrid" style="display: none;"></div>
+
 
                     <button type='button' id="saveButton" class="btn btn-primary" style="display: none;">保存</button>
                     </form>
@@ -113,14 +114,38 @@
     });
     document.readyState === 'complete' ? init() : window.onload = init;
     function init() {
-        var grid = new wjGrid.FlexGrid('#FlexGrid');
-        grid.itemsSource = createData(5);
-        grid.imeEnabled = true;
+        const category = '一般(オペレーター),班長,工長(組長),課長,部長'.split(',');
+        const categoryMap = new wijmo.grid.DataMap(category); 
+        var grid = new wijmo.grid.FlexGrid('#theGrid', {
+            autoGenerateColumns:false,
+            imeEnabled:true,
+            allowAddNew: true,
+            itemsSource:createData(5),
+            selectionMode: wijmo.grid.SelectionMode.Row,
+            columns: [
+                { header: 'Country', binding: 'country',dataMap: categoryMap },
+                { header: 'Date', binding: 'date',  },
+            ]
+        }
+        );
+
+       
+       ;
+        // 行ヘッダーの幅を設定します
+        grid.rowHeaders.columns[0].width = 50;
+
+        // 行ヘッダーに文字列を設定します
+        for (var r = 1; r < grid.rowHeaders.rows.length; r++) {
+            grid.rowHeaders.setCellData(r, 0, r);
+        }
 
     }
 
+    function MyFunction() { }
+    console.log(MyFunction.prototype);
+
     function createData(count) {
-        var countries = 'US,Germany,UK,Japan,Italy,Greece'.split(','),
+        var countries = '一般(オペレーター),班長,工長(組長),課長,部長'.split(','),
             data = [];
 
         for (var i = 0; i < count; i++) {
