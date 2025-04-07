@@ -78,7 +78,7 @@
 
     import { fetchTreeData } from "/static/js/api.js";
     import { buildTreeView } from "/static/js/treeview.js";
-    // import { setupSaveButton } from "/static/js/edit_employee.js";
+    import { setupSaveButton } from "/static/js/edit_employee.js";
     import { setEmployeesSpreadsheet } from "/static/js/edit_employee.js";
 
 
@@ -101,15 +101,15 @@
 
 
 
-        // spreadSheetId = document.getElementById('spreadsheet');
-        // async function loadEmployeesData(spreadSheetId, fetchdata) {
-        //     // const response = await fetch('/api/employees');
-        //     // const employees = await response.json();
-        //     // console.log(employees);
-        //     await setEmployeesSpreadsheet(spreadSheetId, fetchdata);
-        // }
+        spreadSheetId = document.getElementById('spreadsheet');
+        async function loadEmployeesData(spreadSheetId, fetchdata) {
+            const response = await fetch('/api/employees');
+            const employees = await response.json();
+            console.log(employees);
+            await setEmployeesSpreadsheet(spreadSheetId, fetchdata);
+        }
 
-        // setupSaveButton();
+        setupSaveButton();
     });
 
 

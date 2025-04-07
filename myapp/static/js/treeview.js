@@ -103,9 +103,17 @@ function createSectionNode(section, factoryName, departmentName, depth) {
     } else if (depth === 3) {
         // 課=3
         // 課を選択した時に対象のitemを表示
+        let data = {
+            id: section.id,
+            name: section.name,
+            factoryName: factoryName,
+            departmentName: departmentName
+        };
+
+
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSection(div, section.id, section.name, factoryName, departmentName);
+            depthHandlers[depth](div, data);
         });
         li.appendChild(div);
         return li
@@ -137,32 +145,39 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     // 係を選択したときに対象のラインを表示
     // ライン編集の時
 
+    let data = {
+        id: subsection.id,
+        name: subsection.name,
+        factoryName: factoryName,
+        departmentName: departmentName,
+        sectionName: sectionName
 
+    }
 
     if (depthHandlers[depth]) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            handleLines(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+            depthHandlers[depth](div, data);
         });
         li.appendChild(div);
         return li;
     }
     // 人員編集の時
-    else if (depth === 5) {
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
-        });
-        li.appendChild(div);
-        return li;
-    } else if (depth === 5) {
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
-        });
-        li.appendChild(div);
-        return li;
-    }
+    // else if (depth === 5) {
+    //     div.addEventListener('click', (e) => {
+    //         e.stopPropagation();
+    //         handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+    //     });
+    //     li.appendChild(div);
+    //     return li;
+    // } else if (depth === 5) {
+    //     div.addEventListener('click', (e) => {
+    //         e.stopPropagation();
+    //         handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+    //     });
+    //     li.appendChild(div);
+    //     return li;
+    // }
 
     li.appendChild(div);
     return li;
