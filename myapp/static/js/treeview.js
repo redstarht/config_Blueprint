@@ -104,6 +104,9 @@ function createSectionNode(section, factoryName, departmentName, depth) {
     } else if (depth === 3) {
         // 課=3
         // 課を選択した時に対象のitemを表示
+
+
+
         div.addEventListener('click', (e) => {
             e.stopPropagation();
             let data = {
@@ -144,7 +147,14 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     // 係を選択したときに対象のラインを表示
     // ライン編集の時
 
+    let data = {
+        id: subsection.id,
+        name: subsection.name,
+        factoryName: factoryName,
+        departmentName: departmentName,
+        sectionName: sectionName
 
+    }
 
     if (depthHandlers[depth]) {
         div.addEventListener('click', (e) => {
@@ -181,7 +191,6 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     li.appendChild(div);
     return li;
 }
-
 
 
 

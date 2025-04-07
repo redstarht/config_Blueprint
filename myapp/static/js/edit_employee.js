@@ -1,5 +1,4 @@
 import { clearActiveTreeItems } from "/static/js/utils.js";
-// import { japaneseCustomEditor } from "/static/js/japanese_customeditor.js";
 
 // 係を選択したときの処理(残す)
 export function handleEmployees(selectedElement, subsectionId, subsectionName, factoryName, departmentName, sectionName) {
