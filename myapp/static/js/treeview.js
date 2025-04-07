@@ -5,11 +5,12 @@ import { handleEmployees } from "/static/js/edit_employee.js";
 
 
 // depth = どこまでの階層を表示させるか
-// 1=工場,2=部,3=課,4=係(ライン編集) 5:(人員編集) (初期値は4とする) までを表示
+// 1=工場,2=部,3=課,4=係(ライン編集) 5:(人員編集) (初期値は4とする) までを表示 , ※100はテスト用
 const depthHandlers = {
     3: (div, section) => selectSection(div, section.id, section.name, section.factoryName, section.departmentName),
     4: (div, subsection) => handleLines(div, subsection.id, subsection.name, subsection.factoryName, subsection.departmentName, subsection.sectionName),
-    5: (div, subsection) => handleEmployees(div, subsection.id, subsection.name, subsection.factoryName, subsection.departmentName, subsection.sectionName)
+    5: (div, subsection) => handleEmployees(div, subsection.id, subsection.name, subsection.factoryName, subsection.departmentName, subsection.sectionName),
+    100: (div, subsection) => handleEmployees(div, subsection.id, subsection.name, subsection.factoryName, subsection.departmentName, subsection.sectionName)
 };
 
 
@@ -105,7 +106,13 @@ function createSectionNode(section, factoryName, departmentName, depth) {
         // 課を選択した時に対象のitemを表示
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            selectSection(div, section.id, section.name, factoryName, departmentName);
+            let data = {
+                id: section.id,
+                name: section.name,
+                factoryName: factoryName,   
+                departmentName: departmentName
+            }
+            depthHandlers[depth](div, data);
         });
         li.appendChild(div);
         return li
@@ -142,32 +149,39 @@ function createSubsectionNode(subsection, factoryName, departmentName, sectionNa
     if (depthHandlers[depth]) {
         div.addEventListener('click', (e) => {
             e.stopPropagation();
-            handleLines(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+            let  data = {
+                id: subsection.id,
+                name: subsection.name,
+                factoryName: factoryName,
+                departmentName: departmentName,
+                sectionName: sectionName
+            }
+            depthHandlers[depth](div,data);
         });
         li.appendChild(div);
         return li;
     }
     // 人員編集の時
-    else if (depth === 5) {
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
-        });
-        li.appendChild(div);
-        return li;
-    } else if (depth === 5) {
-        div.addEventListener('click', (e) => {
-            e.stopPropagation();
-            handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
-        });
-        li.appendChild(div);
-        return li;
-    }
+    // else if (depth === 5) {
+    //     div.addEventListener('click', (e) => {
+    //         e.stopPropagation();
+    //         handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+    //     });
+    //     li.appendChild(div);
+    //     return li;
+    // } else if (depth === 5) {
+    //     div.addEventListener('click', (e) => {
+    //         e.stopPropagation();
+    //         handleEmployees(div, subsection.id, subsection.name, factoryName, departmentName, sectionName);
+    //     });
+    //     li.appendChild(div);
+    //     return li;
+    // }
 
     li.appendChild(div);
     return li;
 }
-depthHandlers[depth(div, subsection.id, subsection.name, factoryName, departmentName, sectionName)];
+
 
 
 

@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS subsections;
+-- DROP TABLE IF EXISTS subsections;
 -- DROP TABLE IF EXISTS sections;
 -- DROP TABLE IF EXISTS factories;
 DROP TABLE IF EXISTS employees;
-DROP TABLE IF EXISTS production_lines;
+-- DROP TABLE IF EXISTS production_lines;
