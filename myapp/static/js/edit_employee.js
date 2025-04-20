@@ -178,6 +178,26 @@ export function setEmployeesSpreadsheet(spreadSheetId,fetchdata) {
     })
 };
 
+
+export function setEmployeesFlexgrid() {
+    const grid = new FlexGrid('#employeesFlexgrid', {
+        data: [],
+        columns: [
+            { name: 'id', type: 'hidden' }, // id hidden
+            { name: 'subsection_id', type: 'hidden' }, // subsection_id hidden
+            { name: 'name', type: 'text', title: '氏名' }, // name text
+            { name: 'code', type: 'text', title: '社員番号' }, // code text
+            { name: 'position_id', type: 'dropdown', title: '役職' }, // position_id dropdown
+            { name: 'sort_order', type: 'hidden' }, // sort_order hidden
+            { name: 'is_deleted', type: 'hidden' }, // is_deleted hidden
+            { name: 'created_by', type: 'hidden' }, // created_by hidden
+            { name: 'updated_by', type: 'hidden' }, // updated_by hidden
+            { name: 'created_at', type: 'hidden' }, // created_at hidden
+            { name: 'updated_at', type: 'hidden' }  // updated_at hidden
+        ]
+    });
+}
+
 // id hidden
 // subsection_id hidden
 // name text
