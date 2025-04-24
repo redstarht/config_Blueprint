@@ -115,27 +115,27 @@
     document.readyState === 'complete' ? init() : window.onload = init;
     function init() {
         const category = '一般(オペレーター),班長,工長(組長),課長,部長'.split(',');
-        const categoryMap = new wijmo.grid.DataMap(category); 
+        const categoryMap = new wijmo.grid.DataMap(category);
         var grid = new wijmo.grid.FlexGrid('#theGrid', {
-            autoGenerateColumns:false,
-            imeEnabled:true,
+            autoGenerateColumns: false,
+            imeEnabled: true,
             allowAddNew: false,
-            itemsSource:createData(5),
+            itemsSource: createData(5),
             selectionMode: wijmo.grid.SelectionMode.Row,
             columns: [
-                { header: 'Country', binding: 'country',dataMap: categoryMap },
-                { header: 'Date', binding: 'date',  },
+                { header: 'Country', binding: 'country', dataMap: categoryMap },
+                { header: 'Date', binding: 'date', },
             ]
         }
         );
 
-       
-       ;
+
+        ;
         // 行ヘッダーの幅を設定します
         grid.rowHeaders.columns[0].width = 50;
 
         // 行ヘッダーに文字列を設定します
-        for (var r = 1; r <30 ; r++) {
+        for (var r = 1; r < 30; r++) {
             grid.rowHeaders.setCellData(r, 0, r);
         }
         // grid.rowHeaders.rows.length
@@ -144,6 +144,49 @@
 
     function MyFunction() { }
     console.log(MyFunction.prototype);
+
+    // 人員データを取得して表示
+    const subsectionId = 1;
+    fetchEmployees(subsectionId);
+
+    function fetchEmployees(subsectionId) {
+        fetch(`/api/employees/${subsectionId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTPエラー! ステータス: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(employees => {
+                console.log(employees)
+                let formattedEmployees = formatData(employees);
+                let spreadSheetId = document.getElementById('theGrid');
+                setEmployeesSpreadsheet(spreadSheetId, formattedEmployees);
+            })
+            .catch(error => console.error('取得エラー:', error));
+    }
+
+    function formatData(employees) {
+        console.log(employees)
+        let formattedEmployees = employees.map(employee => [
+            employee.id,
+            employee.subsection_id,
+            employee.name,
+            employee.code,
+            employee.position_id,
+            employee.category,
+            employee.sort_order,
+            employee.is_deleted,
+            employee.created_by,
+            employee.updated_by,
+            employee.created_at,
+            employee.updated_at
+        ]);
+
+        return formattedEmployees;
+
+    }
+
 
     function createData(count) {
         var countries = '一般(オペレーター),班長,工長(組長),課長,部長'.split(','),
