@@ -112,6 +112,10 @@
 
         // setupSaveButton();
     });
+    // 人員データを取得して表示 (テスト用リテラル値=1)
+    const subsectionId = 1;
+    fetchEmployees(subsectionId);
+
     document.readyState === 'complete' ? init() : window.onload = init;
     function init() {
         const category = '一般(オペレーター),班長,工長(組長),課長,部長'.split(',');
@@ -123,8 +127,17 @@
             itemsSource: createData(5),
             selectionMode: wijmo.grid.SelectionMode.Row,
             columns: [
-                { header: 'Country', binding: 'country', dataMap: categoryMap },
-                { header: 'Date', binding: 'date', },
+                { header: 'id', binding: 'id'},
+                { header: 'name', binding: 'name', },
+                { header:'code',binding: 'code' },
+                { header: 'position', binding: 'position' },
+                { header: 'category', binding: 'category', dataMap: categoryMap  },
+                { header: 'sort_order', binding: 'sort_order' },
+                { header: 'is_deleted', binding: 'is_deleted' },
+                { header: 'created_by', binding: 'created_by' },
+                { header: 'updated_by', binding: 'updated_by' },
+                { header: 'created_at', binding: 'created_at' },
+                { header: 'updated_at', binding: 'updated_at' },
             ]
         }
         );
@@ -145,9 +158,6 @@
     function MyFunction() { }
     console.log(MyFunction.prototype);
 
-    // 人員データを取得して表示
-    const subsectionId = 1;
-    fetchEmployees(subsectionId);
 
     function fetchEmployees(subsectionId) {
         fetch(`/api/employees/${subsectionId}`)
@@ -160,32 +170,38 @@
             .then(employees => {
                 console.log(employees)
                 let formattedEmployees = formatData(employees);
-                let spreadSheetId = document.getElementById('theGrid');
-                setEmployeesSpreadsheet(spreadSheetId, formattedEmployees);
+                
+                return formattedEmployees
+                // setEmployeesSpreadsheet(gridId, formattedEmployees);
+                // let gridId = document.getElementById('theGrid');
             })
             .catch(error => console.error('取得エラー:', error));
     }
 
     function formatData(employees) {
         console.log(employees)
-        let formattedEmployees = employees.map(employee => [
-            employee.id,
-            employee.subsection_id,
-            employee.name,
-            employee.code,
-            employee.position_id,
-            employee.category,
-            employee.sort_order,
-            employee.is_deleted,
-            employee.created_by,
-            employee.updated_by,
-            employee.created_at,
-            employee.updated_at
-        ]);
-
-        return formattedEmployees;
+        let gridData = [];
+        employees.foreach(employee => [
+            gridData.push({
+                id: employee.id,
+                name: employee.name,
+                code: employee.code,
+                position: employee.position_id,
+                category: employee.category,
+                sort_order: employee.sort_order,
+                is_deleted: employee.is_deleted,
+                created_by: employee.created_by,
+                updated_by: employee.updated_by,
+                created_at: employee.created_at,
+                updated_at: employee.updated_at
+            })]);
+        return gridData;
 
     }
+
+
+
+
 
 
     function createData(count) {
